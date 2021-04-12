@@ -4,18 +4,48 @@
 
 \section{Meta-learning: train a basic learner}
 \subsection{Introduction}
-Since the advent of deep learning, it has shown its powerful fitting ability in many aspects. But this kind of learning ability seems a bit weak in the face of new data. Human babies can recognize cheetahs through spots, and this classification ability is worthy of our deeper exploration of artificial intelligence.
-
+Since the advent of deep learning, it has shown its powerful fitting ability in
+many aspects. But this kind of learning ability seems a bit weak in the face of
+new data. Human babies can recognize cheetahs through spots, and this
+classification ability is worthy of our deeper exploration of artificial
+intelligence.
 
 \subsection{Background}
-In recent years, meta-learning has been raised many times when discussing deep learning method. Although deep learning has achieved remarkable successes on numerous tasks, there are still challenges waiting to be solved, for example, how to learn new concepts quickly. That is the reason why meta-learning was suggested. It is an interesting way based on the idea that could we let the computer learn about how to learn. Mike et al. have given a basic structure definition of meta-learning: inner- and outer-level. The former is responsible for learning new, single tasks, while the latter considers previously learned tasks and accumulates experience from them[\cite{huisman2020survey}]. This kind of structure is implemented to quickly adapt new but small task for a deep learning model.
+In recent years, meta-learning has been raised many times when discussing deep
+learning method. Although deep learning has achieved remarkable successes on
+numerous tasks, there are still challenges waiting to be solved. For example,
+how to learn new concepts quickly. That is the reason why meta-learning was
+suggested. It is an interesting way based on the idea that we could let the
+computer learn about how to learn. Mike et al. have given a basic structural
+definition of meta-learning: inner- and outer-level. The former is responsible
+for learning new, single tasks, while the latter considers previously learned
+tasks and accumulates experience from them (\cite{huisman2020survey}). This kind
+of structure is implemented to quickly adapt new but small tasks for a deep
+learning model.
 
-With several years' development, there are different way to implement meta-learning. Also mentioned in Mike's survey, model-agnostic meta-learning(MAML) is a popular way and it is accepted by lots of researchers. MAML was proposed by Chelsea et al. to solve any learning problem based on gradient descent, including supervised learning and even reinforcement learning[\cite{finn2017model}]. MAML shows its superiority in small sample learning(or called one-shot learning), and this is one of the features we want to show in this project.
+With several years' development, there are different ways to implement
+meta-learning. Also mentioned in Mike's survey, model-agnostic meta-learning
+(MAML) is a popular way and it is accepted by lots of researchers. MAML was
+proposed by Chelsea et al. to solve any learning problem based on gradient
+descent, including supervised learning and even reinforcement learning
+(\cite{finn2017model}). MAML shows its superiority in small sample learning
+(or called one-shot learning), and this is one of the features we want to show
+in this project.
 
 \subsection{Goal}
-Our goal is to build a meta-learning structure and use it to fine-tuned a supervised neural network to classify different classes of images. We will compare this with a normal artificial neural network(ANN) and test their accuracy and generalization ability. This project will be more theoretical, that is to say, the experiment may fail in the end, but we are certain that this will be an interesting and meaningful attempt.
+Our goal is to build a meta-learning structure and use it to fine-tuned a
+supervised neural network to classify different classes of images. We will
+compare this with a normal artificial neural network (ANN) and test their
+accuracy and generalization ability. This project will be more theoretical,
+that is to say, the experiment may fail in the end, but we are certain that
+this will be an interesting and meaningful attempt.
 
-\subsection{Method}
-To build the MAML, we will use Python and PyTorch as our language and toolbox, for they are widely used by neural network researchers. We are aimed to download an image classification data set(obviously there are lots of such kind of image datasets) in Kaggle and use it to test two kinds of neural networks(one with meta-learning and another is the normal ANN). Thus, we could verify the superiority of meta-learning in some aspects compared with traditional ANN.
+\subsection{Methods}
+To build the MAML, we will use Python and PyTorch as our language and toolbox,
+for they are widely used by neural network researchers. We aim to download an
+image classification data set (obviously there are lots of such kind of image
+datasets) in Kaggle and use it to test two kinds of neural networks (one with
+meta-learning and another is the normal ANN). Thus, we could verify the
+superiority of meta-learning in some aspects compared with traditional ANN.
 
 \end{document}
