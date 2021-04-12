@@ -12,4 +12,39 @@ optimization and electric circuit design could all be modelled to SAT problems.
 Hence, a SAT solver is a general purpose platform for solving various
 real-world problems and has obvious importance.
 
+\subsection{Background}
+There are mainly two types of SAT solver technologies: complete methods and
+incomplete methods. Complete methods can guarantee that it will eventually
+report a satisfying assignment or prove not satisfiable, if it run for long
+enough. On the other hand, incomplete methods has no such guarantee and
+generally use stochastic local search (\cite{gomes_kautz_sabharwal_selman_2008}). In many cases
+where the problem does not require a definitive answer, incomplete methods
+could outperform complete methods in terms of both speed and memory usage.
+
+Due to the heuristic nature of genetic algorithms, they could be used as a
+comparison between 4 genetic SAT solvers and a current state-of-art local
+search solver: WSAT. Their results show that evolutionary algorithms can
+compete with WSAT. Some of them even exhibit better performance.
+
+\subsection{Goal}
+We would like to study the various aspects of a genetic SAT solver: the
+representation of solution candidates, fitness functions, crossover, mutation,
+and replacement strategies (\cite{gottlieb_marchiori_rossi_2002}). We would achieve that by
+implementing a genetic SAT solver and evaluate it. We would also compare our
+solver with a highly-tuned, SAT specific solver.
+
+\subsection{Methods}
+We would implement a genetic SAT solver in C/C++. Potentially, we would use
+parallel computing libraries such as OpenMP or Cuda to exploit the parallel
+search nature of genetic algorithms.
+
+Data for evaluating will be generated using one of the existing SAT problem
+generators. We will generate only satisfiable problems because they are
+arguably the most meaningful for benchmarking.
+
+As for the comparison, we would compare our solver with the existing solvers
+using different benchmarking problems we generate. The rate of successfully
+finding a satisfiable solution and the time taken will be important
+measurements.
+
 \end{document}
