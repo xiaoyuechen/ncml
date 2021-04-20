@@ -1,5 +1,5 @@
 #include <cstdio>
-#include "Parser.h"
+#include "gntsat/parser.h"
 
 int main(int argc, char** argv) {
 
