@@ -5,6 +5,8 @@ project(gntsat)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-add_executable(gntsat src/main.cc)
+add_executable(gntsat 
+	include/gntsat/problem.h
+	src/main.cc)
 
 target_include_directories(gntsat PRIVATE include)
