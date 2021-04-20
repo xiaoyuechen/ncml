@@ -3,11 +3,13 @@
 //
 
 #pragma once
+#include "gntsat/problem.h"
 
 namespace gntsat {
 
     class Parser {
-        Problem readfile();
+    public:
+        void readfile(const char* filename);
     };
 }
 
