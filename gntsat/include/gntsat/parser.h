@@ -7,10 +7,6 @@
 
 namespace gntsat {
 
-    class Parser {
-    public:
-        Problem readfile(const char* filename);
-    };
+Problem readfile(const char* filename);
+
 }
-
-

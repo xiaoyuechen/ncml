@@ -17,7 +17,7 @@ namespace gntsat {
 static const std::regex param_reg("p cnf (\\d+) (\\d+)");
 static const std::regex clause_reg("(\\-?\\d+) (\\-?\\d+) (\\-?\\d+) .*");
 
-Problem Parser::readfile(const char* filename) {
+Problem readfile(const char* filename) {
   std::ifstream infile;
   infile.open(filename);
   std::string cnf_data;
