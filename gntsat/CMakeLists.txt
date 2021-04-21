@@ -8,7 +8,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 add_executable(gntsat
 	include/gntsat/problem.h
 	include/gntsat/parser.h
+	include/gntsat/solver.h
 	src/main.cc
-	src/parser.cc)
+	src/parser.cc
+	src/solver.cc)
 
 target_include_directories(gntsat PRIVATE include)
