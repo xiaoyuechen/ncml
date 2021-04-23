@@ -13,12 +13,13 @@ struct Solution {
 
 class Solver {
  public:
+  using Population = std::vector<Solution>;
+
   Solver(const Problem& problem);
 
   Solution run();
 
  private:
-  using Population = std::vector<Solution>;
 
   const Problem& problem_;
   Population population_;

@@ -27,14 +27,40 @@ int CountSatClause(const Solution& solution, const Problem& problem) noexcept {
   return sat_count;
 }
 
-void GenRandClause(Solution* out_solution, int size) {
+void GenRandSolution(Solution* out_solution, int size) {
   out_solution->bit_string.resize(size);
   for (int i = 0; i != size; ++i) {
     out_solution->bit_string[i] = RandBool();
   }
 }
 
-Solver::Solver(const Problem& problem) : problem_(problem) { srand(time(0)); }
+void PrintBitString(const Solution& solution){
+  for(int i=0; i!= solution.bit_string.size(); ++i){
+    std::cout<< solution.bit_string[i];
+  }
+  std::cout<<std::endl;
+
+}
+void PrintPopulation(const Solver::Population& population, const Problem& problem){
+  for(int i=0; i!= population.size(); ++i){
+    PrintBitString(population[i]);
+    std::cout<< CountSatClause(population[i], problem);
+    std::cout<< std::endl;
+  }
+}
+
+Solver::Solver(const Problem& problem) : problem_(problem) {
+  srand(time(0));
+  int initial_population_count = 800;
+  population_.resize(initial_population_count);
+  for (int i = 0; i != population_.size(); ++i) {
+    do {
+      GenRandSolution(&population_[i], problem_.var_count);
+    } while (CountSatClause(population_[i], problem_) <
+             ((7 / 8) * problem_.cnf.size()));
+  }
+  PrintPopulation(population_, problem_);
+}
 
 Solution Solver::run() {}
 
