@@ -57,7 +57,7 @@ Solver::Solver(const Problem& problem) : problem_(problem) {
     do {
       GenRandSolution(&population_[i], problem_.var_count);
     } while (CountSatClause(population_[i], problem_) <
-             ((7 / 8) * problem_.cnf.size()));
+             ((7.f / 8.f) * problem_.cnf.size()));
   }
   PrintPopulation(population_, problem_);
 }
