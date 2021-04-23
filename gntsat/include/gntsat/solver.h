@@ -18,10 +18,10 @@ class Solver {
   Solution run();
 
  private:
-  using Polulation = std::vector<Solution>;
+  using Population = std::vector<Solution>;
 
   const Problem& problem_;
-  Polulation polulation_;
+  Population population_;
 };
 
 }  // namespace gntsat
