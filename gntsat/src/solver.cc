@@ -34,18 +34,19 @@ void GenRandSolution(Solution* out_solution, int size) {
   }
 }
 
-void PrintBitString(const Solution& solution){
-  for(int i=0; i!= solution.bit_string.size(); ++i){
-    std::cout<< solution.bit_string[i];
+void PrintBitString(const Solution& solution) {
+  for (int i = 0; i != solution.bit_string.size(); ++i) {
+    std::cout << solution.bit_string[i];
   }
-  std::cout<<std::endl;
-
+  std::cout << std::endl;
 }
-void PrintPopulation(const Solver::Population& population, const Problem& problem){
-  for(int i=0; i!= population.size(); ++i){
+
+void PrintPopulation(const Solver::Population& population,
+                     const Problem& problem) {
+  for (int i = 0; i != population.size(); ++i) {
     PrintBitString(population[i]);
-    std::cout<< CountSatClause(population[i], problem);
-    std::cout<< std::endl;
+    std::cout << CountSatClause(population[i], problem);
+    std::cout << std::endl;
   }
 }
 

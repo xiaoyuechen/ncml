@@ -1,7 +1,7 @@
 #pragma once
 
-#include <vector>
 #include <random>
+#include <vector>
 
 #include "gntsat/problem.h"
 
@@ -20,7 +20,6 @@ class Solver {
   Solution run();
 
  private:
-
   const Problem& problem_;
   Population population_;
 };
