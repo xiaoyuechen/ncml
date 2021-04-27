@@ -7,14 +7,12 @@
 
 namespace gntsat {
 
-struct Solution {
-  std::vector<bool> bit_string;
-};
+using Solution = std::vector<bool>;
+
+using Population = std::vector<Solution>;
 
 class Solver {
  public:
-  using Population = std::vector<Solution>;
-
   Solver(const Problem& problem);
 
   Solution run();

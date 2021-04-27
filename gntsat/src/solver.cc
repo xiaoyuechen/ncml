@@ -1,8 +1,11 @@
 #include "gntsat/solver.h"
 
+#include <algorithm>
+#include <cmath>
 #include <cstdlib>
 #include <ctime>
 #include <iostream>
+#include <tuple>
 
 namespace gntsat {
 
@@ -11,7 +14,7 @@ bool RandBool() noexcept { return rand() % 2; }
 bool IsClauseSat(const Solution& solution, const Problem::Clause& clause) {
   for (int i = 0; i != clause.size(); ++i) {
     int idx = abs(clause[i]);
-    bool var = solution.bit_string[idx];
+    bool var = solution[idx];
     if ((clause[i] > 0) == var) {
       return true;
     }
@@ -28,21 +31,20 @@ int CountSatClause(const Solution& solution, const Problem& problem) noexcept {
 }
 
 void GenRandSolution(Solution* out_solution, int size) {
-  out_solution->bit_string.resize(size);
+  out_solution->resize(size);
   for (int i = 0; i != size; ++i) {
-    out_solution->bit_string[i] = RandBool();
+    (*out_solution)[i] = RandBool();
   }
 }
 
 void PrintBitString(const Solution& solution) {
-  for (int i = 0; i != solution.bit_string.size(); ++i) {
-    std::cout << solution.bit_string[i];
+  for (int i = 0; i != solution.size(); ++i) {
+    std::cout << solution[i];
   }
   std::cout << std::endl;
 }
 
-void PrintPopulation(const Solver::Population& population,
-                     const Problem& problem) {
+void PrintPopulation(const Population& population, const Problem& problem) {
   for (int i = 0; i != population.size(); ++i) {
     PrintBitString(population[i]);
     std::cout << CountSatClause(population[i], problem);
@@ -58,6 +60,35 @@ Solution OnePointCrossOver(const Solution& sol_1, const Solution& sol_2, int poi
 
 }
 
+float EvalFitness(const Solution& solution, const Problem& problem) {
+  return CountSatClause(solution, problem);
+}
+
+int RankSelect(int size) {
+  int sum = ((1 + size) * size) / 2;
+  int r = rand() % sum;
+  return floor((1 + sqrt(1 + 8 * r)) / 2) - 1;
+}
+
+static constexpr std::size_t kMaxTournamentSize = 64;
+std::size_t TournamentSelect(const Population& population,
+                             const Problem& problem,
+                             std::size_t tournament_size, float p = 1.0f) {
+  auto candidadtes = std::array<std::size_t, kMaxTournamentSize>{};
+  for (std::size_t i = 0; i != tournament_size; ++i) {
+    candidadtes[i] = rand() % population.size();
+  }
+  std::sort(candidadtes.begin(), candidadtes.begin() + tournament_size,
+            [&](std::size_t lhs, std::size_t rhs) {
+              return EvalFitness(population[lhs], problem) <
+                     EvalFitness(population[rhs], problem);
+            });
+  for (std::size_t i = 0; i != tournament_size; ++i) {
+    float r = rand() / (float)RAND_MAX;
+    if (r < p) return candidadtes[i];
+  }
+  return candidadtes[tournament_size - 1];
+}
 
 Solver::Solver(const Problem& problem) : problem_(problem) {
   srand(time(0));
@@ -72,6 +103,12 @@ Solver::Solver(const Problem& problem) : problem_(problem) {
   PrintPopulation(population_, problem_);
 }
 
-Solution Solver::run() {}
+Solution Solver::run() {
+  while (true) {
+    if (CountSatClause(population_.back(), problem_)) {
+      return population_.back();
+    }
+  }
+}
 
 }  // namespace gntsat
