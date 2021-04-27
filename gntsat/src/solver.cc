@@ -108,7 +108,8 @@ Solution Solver::run() {
               [=](const Solution& lhs, const Solution& rhs) {
                 return EvalFitness(lhs, problem_) > EvalFitness(rhs, problem_);
               });
-    if (CountSatClause(GetCurrentGen().back(), problem_)) {
+    if (CountSatClause(GetCurrentGen().back(), problem_) ==
+        problem_.cnf.size()) {
       return GetCurrentGen().back();
     }
 
