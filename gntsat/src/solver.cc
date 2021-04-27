@@ -2,25 +2,24 @@
 
 #include <algorithm>
 #include <cmath>
+#include <cstdint>
 #include <cstdlib>
 #include <ctime>
 #include <iostream>
 #include <tuple>
-#include <cstdint>
 
 namespace gntsat {
 
 bool RandBool() noexcept { return rand() % 2; }
 
 bool IsClauseSat(const Solution& solution, const Problem::Clause& clause) {
+  int sat_literal_count = 0;
   for (int i = 0; i != clause.size(); ++i) {
     int idx = abs(clause[i]);
     bool var = solution[idx];
-    if ((clause[i] > 0) == var) {
-      return true;
-    }
+    sat_literal_count += ((clause[i] > 0) == var);
   }
-  return false;
+  return sat_literal_count;
 }
 
 int CountSatClause(const Solution& solution, const Problem& problem) noexcept {
@@ -55,12 +54,6 @@ void PrintPopulation(const Population& population, const Problem& problem) {
 
 float EvalFitness(const Solution& solution, const Problem& problem) {
   return CountSatClause(solution, problem);
-}
-
-int RankSelect(int size) {
-  int sum = ((1 + size) * size) / 2;
-  int r = rand() % sum;
-  return floor((1 + sqrt(1 + 8 * r)) / 2) - 1;
 }
 
 static constexpr std::size_t kMaxTournamentSize = 64;
@@ -101,7 +94,7 @@ std::array<std::size_t, 2> SelectCrossoverPair(const Problem& problem,
   return index_arr;
 }
 
-void OnePointCrossOver(const Population& old_gen, Population* new_gen,
+void OnePointCrossover(const Population& old_gen, Population* new_gen,
                        std::array<std::size_t, 2> arr) {
   int point = rand() % old_gen.back().size();
   new_gen->push_back(old_gen[arr[0]]);
@@ -112,11 +105,12 @@ void OnePointCrossOver(const Population& old_gen, Population* new_gen,
                    (new_gen->rbegin() + 1)->begin());
 }
 
-void Mutation(const Solution& old_gen, Solution* new_gen, std::size_t mutation_flip_count){
-  for (std::size_t i = 0; i!= mutation_flip_count; ++i){
-      std::size_t idx = rand() % old_gen.size();
-      *new_gen = old_gen;
-      (*new_gen)[idx] = !(*new_gen)[idx];
+void Mutation(const Solution& old_gen, Solution* new_gen,
+              std::size_t mutation_flip_count) {
+  for (std::size_t i = 0; i != mutation_flip_count; ++i) {
+    std::size_t idx = rand() % old_gen.size();
+    *new_gen = old_gen;
+    (*new_gen)[idx] = !(*new_gen)[idx];
   }
 }
 
@@ -138,26 +132,40 @@ Solution Solver::run() {
               [=](const Solution& lhs, const Solution& rhs) {
                 return EvalFitness(lhs, problem_) > EvalFitness(rhs, problem_);
               });
-    if (CountSatClause(GetCurrentGen().back(), problem_) ==
+    printf("Best so far: %d\n",
+           CountSatClause(GetCurrentGen().front(), problem_));
+    if (CountSatClause(GetCurrentGen().front(), problem_) ==
         problem_.cnf.size()) {
-      return GetCurrentGen().back();
+      return GetCurrentGen().front();
     }
 
-    Clone(GetCurrentGen(), &GetNextGen(), setting_.clone_rate);
+    // Clone
+    for (std::size_t i = 0; i < GetCurrentGen().size() * setting_.clone_rate;
+         ++i) {
+      GetNextGen().push_back(GetCurrentGen()[i]);
+    }
+
+    // Crossover
     for (int i = 0; i < setting_.cross_over_rate * GetCurrentGen().size();
          ++i) {
       auto select_arr =
           SelectCrossoverPair(problem_, GetCurrentGen(),
                               setting_.tournament_size, setting_.tournament_p);
-      OnePointCrossOver(GetCurrentGen(), &GetNextGen(), select_arr);
+      OnePointCrossover(GetCurrentGen(), &GetNextGen(), select_arr);
     }
-    for (int i = 0; i < setting_.mutation_rate * GetCurrentGen().size(); ++i){
+
+    // Mutation
+    for (int i = 0; i < setting_.mutation_rate * GetCurrentGen().size(); ++i) {
       int idx = rand() % GetCurrentGen().size();
       GetNextGen().emplace_back();
-      Mutation(GetCurrentGen()[idx], &GetCurrentGen().back(), setting_.mutation_flip_count);
+      Mutation(GetCurrentGen()[idx], &GetNextGen().back(),
+               setting_.mutation_flip_count);
     }
-  }
 
+    current_gen_ = !current_gen_;
+    GetCurrentGen().resize(setting_.population_size);
+    GetNextGen().clear();
+  }
 }
 
 }  // namespace gntsat
