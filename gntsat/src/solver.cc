@@ -90,24 +90,35 @@ std::size_t TournamentSelect(const Population& population,
   return candidadtes[tournament_size - 1];
 }
 
-Solver::Solver(const Problem& problem) : problem_(problem) {
+void Clone(const Population& old_gen, Population* new_gen, float rate) {
+  for (std::size_t i = 0; i != (std::size_t)old_gen.size() * rate; ++i) {
+    new_gen->push_back(old_gen[i]);
+  }
+}
+
+Solver::Solver(const Problem& problem, Setting setting)
+    : problem_(problem), setting_(setting) {
   srand(time(0));
-  int initial_population_count = 800;
-  population_.resize(initial_population_count);
-  for (int i = 0; i != population_.size(); ++i) {
+  GetCurrentGen().resize(setting_.population_size);
+  for (int i = 0; i != GetCurrentGen().size(); ++i) {
     do {
-      GenRandSolution(&population_[i], problem_.var_count);
-    } while (CountSatClause(population_[i], problem_) <
+      GenRandSolution(&GetCurrentGen()[i], problem_.var_count);
+    } while (CountSatClause(GetCurrentGen()[i], problem_) <
              ((7.f / 8.f) * problem_.cnf.size()));
   }
-  PrintPopulation(population_, problem_);
 }
 
 Solution Solver::run() {
   while (true) {
-    if (CountSatClause(population_.back(), problem_)) {
-      return population_.back();
+    std::sort(GetCurrentGen().begin(), GetCurrentGen().end(),
+              [=](const Solution& lhs, const Solution& rhs) {
+                return EvalFitness(lhs, problem_) > EvalFitness(rhs, problem_);
+              });
+    if (CountSatClause(GetCurrentGen().back(), problem_)) {
+      return GetCurrentGen().back();
     }
+
+    Clone(GetCurrentGen(), &GetNextGen(), setting_.clone_rate);
   }
 }
 
