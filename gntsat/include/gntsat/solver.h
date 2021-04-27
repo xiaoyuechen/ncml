@@ -16,6 +16,8 @@ class Solver {
   struct Setting {
     std::size_t population_size;
     float clone_rate, cross_over_rate, mutation_rate;
+    std::size_t tournament_size;
+    float tournament_p;
   };
 
   Solver(const Problem& problem, Setting setting);

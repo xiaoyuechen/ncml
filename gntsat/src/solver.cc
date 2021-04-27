@@ -88,7 +88,28 @@ void Clone(const Population& old_gen, Population* new_gen, float rate) {
   }
 }
 
+std::array<std::size_t, 2> SelectCrossoverPair(const Problem& problem,
+                                               const Population& population,
+                                               std::size_t tournament_size,
+                                               float p) {
+  std::array<std::size_t, 2> index_arr;
+  for (int j = 0; j < 2; ++j) {
+    index_arr[j] = TournamentSelect(population, problem, tournament_size, p);
+  }
 
+  return index_arr;
+}
+
+void OnePointCrossOver(const Population& old_gen, Population* new_gen,
+                       std::array<std::size_t, 2> arr) {
+  int point = rand() % old_gen.back().size();
+  new_gen->push_back(old_gen[arr[0]]);
+  new_gen->push_back(old_gen[arr[1]]);
+
+  std::swap_ranges(new_gen->rbegin()->begin(),
+                   (new_gen->rbegin()->begin()) + point,
+                   (new_gen->rbegin() + 1)->begin());
+}
 
 Solver::Solver(const Problem& problem, Setting setting)
     : problem_(problem), setting_(setting) {
@@ -114,7 +135,13 @@ Solution Solver::run() {
     }
 
     Clone(GetCurrentGen(), &GetNextGen(), setting_.clone_rate);
-
+    for (int i = 0; i < setting_.cross_over_rate * GetCurrentGen().size();
+         ++i) {
+      auto select_arr =
+          SelectCrossoverPair(problem_, GetCurrentGen(),
+                              setting_.tournament_size, setting_.tournament_p);
+      OnePointCrossOver(GetCurrentGen(), &GetNextGen(), select_arr);
+    }
   }
 }
 
