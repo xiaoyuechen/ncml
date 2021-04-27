@@ -18,6 +18,7 @@ class Solver {
     float clone_rate, cross_over_rate, mutation_rate;
     std::size_t tournament_size;
     float tournament_p;
+    std::size_t mutation_flip_count;
   };
 
   Solver(const Problem& problem, Setting setting);

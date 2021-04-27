@@ -6,6 +6,7 @@
 #include <ctime>
 #include <iostream>
 #include <tuple>
+#include <cstdint>
 
 namespace gntsat {
 
@@ -111,6 +112,14 @@ void OnePointCrossOver(const Population& old_gen, Population* new_gen,
                    (new_gen->rbegin() + 1)->begin());
 }
 
+void Mutation(const Solution& old_gen, Solution* new_gen, std::size_t mutation_flip_count){
+  for (std::size_t i = 0; i!= mutation_flip_count; ++i){
+      std::size_t idx = rand() % old_gen.size();
+      *new_gen = old_gen;
+      (*new_gen)[idx] = !(*new_gen)[idx];
+  }
+}
+
 Solver::Solver(const Problem& problem, Setting setting)
     : problem_(problem), setting_(setting) {
   srand(time(0));
@@ -142,7 +151,13 @@ Solution Solver::run() {
                               setting_.tournament_size, setting_.tournament_p);
       OnePointCrossOver(GetCurrentGen(), &GetNextGen(), select_arr);
     }
+    for (int i = 0; i < setting_.mutation_rate * GetCurrentGen().size(); ++i){
+      int idx = rand() % GetCurrentGen().size();
+      GetNextGen().emplace_back();
+      Mutation(GetCurrentGen()[idx], &GetCurrentGen().back(), setting_.mutation_flip_count);
+    }
   }
+
 }
 
 }  // namespace gntsat
