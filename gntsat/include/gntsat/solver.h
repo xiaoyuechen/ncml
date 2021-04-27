@@ -23,9 +23,13 @@ class Solver {
   Solution run();
 
  private:
+  Population& GetCurrentGen() noexcept { return population_[current_gen_]; }
+  Population& GetNextGen() noexcept { return population_[!current_gen_]; }
+
   const Problem& problem_;
   Setting setting_;
-  Population population_;
+  Population population_[2];
+  bool current_gen_ = 0;
 };
 
 }  // namespace gntsat
