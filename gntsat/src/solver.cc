@@ -52,14 +52,6 @@ void PrintPopulation(const Population& population, const Problem& problem) {
   }
 }
 
-Solution OnePointCrossOver(const Solution& sol_1, const Solution& sol_2, int point) {
-    std::vector<bool>::const_iterator begin_point = sol_1.bit_string.begin() + point * 4;
-    std::vector<bool>::const_iterator end_point = sol_1.bit_string.end();
-    std::vector<int> temp_vec(begin_point, end_point);
-
-
-}
-
 float EvalFitness(const Solution& solution, const Problem& problem) {
   return CountSatClause(solution, problem);
 }
@@ -96,6 +88,8 @@ void Clone(const Population& old_gen, Population* new_gen, float rate) {
   }
 }
 
+
+
 Solver::Solver(const Problem& problem, Setting setting)
     : problem_(problem), setting_(setting) {
   srand(time(0));
@@ -119,6 +113,7 @@ Solution Solver::run() {
     }
 
     Clone(GetCurrentGen(), &GetNextGen(), setting_.clone_rate);
+
   }
 }
 
