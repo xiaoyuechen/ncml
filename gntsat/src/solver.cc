@@ -50,6 +50,15 @@ void PrintPopulation(const Solver::Population& population,
   }
 }
 
+Solution OnePointCrossOver(const Solution& sol_1, const Solution& sol_2, int point) {
+    std::vector<bool>::const_iterator begin_point = sol_1.bit_string.begin() + point * 4;
+    std::vector<bool>::const_iterator end_point = sol_1.bit_string.end();
+    std::vector<int> temp_vec(begin_point, end_point);
+
+
+}
+
+
 Solver::Solver(const Problem& problem) : problem_(problem) {
   srand(time(0));
   int initial_population_count = 800;
