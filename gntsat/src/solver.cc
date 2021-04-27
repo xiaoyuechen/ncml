@@ -82,17 +82,16 @@ std::size_t TournamentSelect(const Population& population,
   return candidadtes[tournament_size - 1];
 }
 
-Solver::Solver(const Problem& problem) : problem_(problem) {
+Solver::Solver(const Problem& problem, Setting setting)
+    : problem_(problem), setting_(setting) {
   srand(time(0));
-  int initial_population_count = 800;
-  population_.resize(initial_population_count);
+  population_.resize(setting_.population_size);
   for (int i = 0; i != population_.size(); ++i) {
     do {
       GenRandSolution(&population_[i], problem_.var_count);
     } while (CountSatClause(population_[i], problem_) <
              ((7.f / 8.f) * problem_.cnf.size()));
   }
-  PrintPopulation(population_, problem_);
 }
 
 Solution Solver::run() {
@@ -100,6 +99,7 @@ Solution Solver::run() {
     if (CountSatClause(population_.back(), problem_)) {
       return population_.back();
     }
+
   }
 }
 

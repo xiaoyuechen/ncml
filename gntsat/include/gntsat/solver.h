@@ -13,12 +13,18 @@ using Population = std::vector<Solution>;
 
 class Solver {
  public:
-  Solver(const Problem& problem);
+  struct Setting {
+    std::size_t population_size;
+    float clone_rate, cross_over_rate, mutation_rate;
+  };
+
+  Solver(const Problem& problem, Setting setting);
 
   Solution run();
 
  private:
   const Problem& problem_;
+  Setting setting_;
   Population population_;
 };
 
