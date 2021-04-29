@@ -101,11 +101,11 @@ void OnePointCrossover(const Population& old_gen, Population* new_gen,
   new_gen->push_back(old_gen[arr[1]]);
 
   std::swap_ranges(new_gen->rbegin()->begin(),
-                   (new_gen->rbegin()->begin()) + point,
+                   new_gen->rbegin()->begin() + point,
                    (new_gen->rbegin() + 1)->begin());
 }
 
-void Mutation(const Solution& old_gen, Solution* new_gen,
+void Mutate(const Solution& old_gen, Solution* new_gen,
               std::size_t mutation_flip_count) {
   for (std::size_t i = 0; i != mutation_flip_count; ++i) {
     std::size_t idx = rand() % old_gen.size();
@@ -159,7 +159,7 @@ Solution Solver::run() {
     for (int i = 0; i < setting_.mutation_rate * GetCurrentGen().size(); ++i) {
       int idx = rand() % GetCurrentGen().size();
       GetNextGen().emplace_back();
-      Mutation(GetCurrentGen()[idx], &GetNextGen().back(),
+      Mutate(GetCurrentGen()[idx], &GetNextGen().back(),
                setting_.mutation_flip_count);
     }
 
