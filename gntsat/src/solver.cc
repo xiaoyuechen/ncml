@@ -66,7 +66,7 @@ std::size_t TournamentSelect(const Population& population,
   }
   std::sort(candidadtes.begin(), candidadtes.begin() + tournament_size,
             [&](std::size_t lhs, std::size_t rhs) {
-              return EvalFitness(population[lhs], problem) <
+              return EvalFitness(population[lhs], problem) >
                      EvalFitness(population[rhs], problem);
             });
   for (std::size_t i = 0; i != tournament_size; ++i) {
@@ -134,6 +134,7 @@ Solution Solver::run() {
               });
     printf("Best so far: %d\n",
            CountSatClause(GetCurrentGen().front(), problem_));
+    PrintBitString(GetCurrentGen().front());
     if (CountSatClause(GetCurrentGen().front(), problem_) ==
         problem_.cnf.size()) {
       return GetCurrentGen().front();
@@ -163,7 +164,8 @@ Solution Solver::run() {
     }
 
     current_gen_ = !current_gen_;
-    GetCurrentGen().resize(setting_.population_size);
+    if (GetCurrentGen().size() > setting_.population_size)
+      GetCurrentGen().resize(setting_.population_size);
     GetNextGen().clear();
   }
 }
