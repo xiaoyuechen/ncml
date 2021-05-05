@@ -14,7 +14,7 @@
 
 namespace gntsat {
 
-static const std::regex param_reg("p cnf (\\d+) (\\d+)");
+static const std::regex param_reg("p\\s+cnf\\s+(\\d+)\\s+(\\d+)");
 static const std::regex clause_reg("(\\-?\\d+) (\\-?\\d+) (\\-?\\d+) .*");
 
 Problem readfile(const char* filename) {
@@ -34,14 +34,15 @@ Problem readfile(const char* filename) {
         int clause_count = std::stoi(sm[2]);
         problem.cnf.reserve(clause_count);
       }
-    } else {
+    } else if (cnf_data.size() > 0) {
       std::regex_search(cnf_data, sm, clause_reg);
       Problem::Clause clause;
-
-      for (int i = 1; i != sm.size(); ++i) {
-        clause[i - 1] = std::stoi(sm[i]);
+      if (sm.size() == 4) {
+        for (int i = 1; i != sm.size(); ++i) {
+          clause[i - 1] = std::stoi(sm[i]);
+        }
+        problem.cnf.push_back(clause);
       }
-      problem.cnf.push_back(clause);
     }
   }
   return std::move(problem);
