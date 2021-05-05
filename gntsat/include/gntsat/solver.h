@@ -38,6 +38,7 @@ class Solver {
   bool current_gen_ = 0;
   std::vector<Yi> y_;
   std::vector<float> clause_sat_freqency_;
+  std::vector<size_t> index_arr_;
 };
 
 }  // namespace gntsat

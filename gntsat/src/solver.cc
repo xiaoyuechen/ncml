@@ -58,7 +58,7 @@ void PrintPopulation(const Population& population, const Problem& problem) {
 float EvalFitness(const Yi& yi, const std::vector<float>& frequencies) {
   float fitness = 0;
   for (std::size_t i = 0; i != yi.size(); ++i)
-    fitness += yi[i] * frequencies[i];
+    fitness -= !yi[i] * (1/frequencies[i]) * (1/frequencies[i]);
   return fitness;
 }
 
@@ -129,6 +129,10 @@ Solver::Solver(const Problem& problem, Setting setting)
     } while (CountSatClause(GetCurrentGen()[i], problem_) <
              ((7.f / 8.f) * problem_.cnf.size()));
   }
+  index_arr_.resize(setting_.population_size);
+  for (int i = 0; i < setting_.population_size; ++i) {
+    index_arr_[i] = i;
+  }
 }
 
 void UpdateYi(const Solution& solution, const Problem& problem, Yi* yi) {
@@ -164,22 +168,23 @@ Solution Solver::run() {
   while (true) {
     UpdateY(GetCurrentGen(), problem_, &y_);
     CountClauseSatFrequency(y_, &clause_sat_freqency_);
-    std::sort(GetCurrentGen().begin(), GetCurrentGen().end(),
-              [&](const Solution& lhs, const Solution& rhs) {
-                return fitness_fn(lhs) > fitness_fn(rhs);
+    std::sort(index_arr_.begin(), index_arr_.end(),
+              [=](size_t lhs, size_t rhs) {
+                return EvalFitness(y_[lhs], clause_sat_freqency_) > EvalFitness(y_[rhs], clause_sat_freqency_);
               });
     printf("Best so far: %d\n",
-           CountSatClause(GetCurrentGen().front(), problem_));
-    PrintBitString(GetCurrentGen().front());
-    if (CountSatClause(GetCurrentGen().front(), problem_) ==
+           CountSatClause(GetCurrentGen()[index_arr_.front()], problem_));
+    PrintBitString(GetCurrentGen()[index_arr_.front()]);
+    std::cout << "Best Evaluation Fitness: " << EvalFitness(y_[index_arr_.front()], clause_sat_freqency_) << std::endl;
+    if (CountSatClause(GetCurrentGen()[index_arr_.front()], problem_) ==
         problem_.cnf.size()) {
-      return GetCurrentGen().front();
+      return GetCurrentGen()[index_arr_.front()];
     }
 
     // Clone
     for (std::size_t i = 0; i < GetCurrentGen().size() * setting_.clone_rate;
          ++i) {
-      GetNextGen().push_back(GetCurrentGen()[i]);
+      GetNextGen().push_back(GetCurrentGen()[index_arr_[i]]);
     }
 
     // Crossover
@@ -200,8 +205,12 @@ Solution Solver::run() {
     }
 
     current_gen_ = !current_gen_;
-    if (GetCurrentGen().size() > setting_.population_size)
-      GetCurrentGen().resize(setting_.population_size);
+    if (GetCurrentGen().size() > setting_.population_size) {
+      for (int i = 0; i < GetCurrentGen().size() - setting_.population_size; ++i) {
+        size_t tmp = *(index_arr_.rbegin() + i);
+        GetCurrentGen().erase(GetCurrentGen().begin() + tmp);
+      }
+    }
     GetNextGen().clear();
   }
 }
