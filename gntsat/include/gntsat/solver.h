@@ -11,6 +11,9 @@ using Solution = std::vector<bool>;
 
 using Population = std::vector<Solution>;
 
+using Yi = std::vector<bool>;
+using Y = std::vector<Yi>;
+
 class Solver {
  public:
   struct Setting {
@@ -33,6 +36,9 @@ class Solver {
   Setting setting_;
   Population population_[2];
   bool current_gen_ = 0;
+  std::vector<Yi> y_;
+  std::vector<float> clause_sat_freqency_;
+  std::vector<size_t> index_arr_;
 };
 
 }  // namespace gntsat
