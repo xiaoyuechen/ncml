@@ -178,7 +178,7 @@ inline int Improvement(const uint64_t* bitstring, size_t bitstring_offset_bits,
   return after_sat_count - before_sat_count;
 }
 
-inline void CrossoverCC(size_t* out_child, size_t child_offset,
+inline void CrossoverCC(uint64_t * out_child, size_t child_offset,
                         uint64_t* parentx, size_t parentx_offset,
                         uint64_t* parenty, size_t parenty_offset,
                         size_t num_var, const int* cnf_begin,
@@ -203,7 +203,7 @@ inline void CrossoverCC(size_t* out_child, size_t child_offset,
     if (!ReadBit(parentx_result, 0, i) && !ReadBit(parenty_result, 0, i)) {
       for (size_t j = 0; j < 3; ++j) {
         int literal = *(cnf_begin + 3 * i + j);
-        deltas[i] = Improvement(parentx, parentx_offset, abs(literal),
+        deltas[j] = Improvement(parentx, parentx_offset, abs(literal),
                                 cnf_begin, cnf_end) +
                     Improvement(parenty, parenty_offset, abs(literal),
                                 cnf_begin, cnf_end);
