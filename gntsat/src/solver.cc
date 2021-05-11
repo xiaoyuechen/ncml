@@ -58,7 +58,7 @@ void PrintPopulation(const Population& population, const Problem& problem) {
 float EvalFitness(const Yi& yi, const std::vector<float>& frequencies) {
   float fitness = 0;
   for (std::size_t i = 0; i != yi.size(); ++i)
-    fitness -= !yi[i] * (1/frequencies[i]) * (1/frequencies[i]);
+    fitness -= !yi[i] * (1/frequencies[i]);
   return fitness;
 }
 

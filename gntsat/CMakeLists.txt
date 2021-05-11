@@ -1,16 +1,32 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.14)
+
+option(GNTSAT_BUILD_TESTS "Build all of GNTSAT's own tests." OFF)
 
 project(gntsat)
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-add_executable(gntsat
+add_library(gntsat-lib
 	include/gntsat/problem.h
 	include/gntsat/parser.h
 	include/gntsat/solver.h
-	src/main.cc
+	include/gntsat/compute.h
+	include/gntsat/io.h
 	src/parser.cc
-	src/solver.cc)
+	src/solver.cc
+	src/io.cc
+	)
 
-target_include_directories(gntsat PRIVATE include)
+target_include_directories(gntsat-lib
+	PUBLIC include
+	PRIVATE src)
+
+
+add_executable(gntsat src/main.cc)
+
+target_link_libraries(gntsat PRIVATE gntsat-lib)
+
+
+add_subdirectory(extern)
+add_subdirectory(tests)
