@@ -2,6 +2,7 @@
 
 #include <xmmintrin.h>
 
+#include <algorithm>
 #include <bitset>
 #include <cstddef>
 #include <cstdint>
@@ -19,13 +20,40 @@ inline bool ReadBit(const uint64_t* bitstring_begin,
   return word & (1ull << bit_offset);
 }
 
+inline void SetBit(uint64_t* bitstring_begin, size_t bitstring_offset_bits,
+                   size_t bit_pos) noexcept {
+  bit_pos += bitstring_offset_bits;
+  size_t word_pos = bit_pos / 64;
+  size_t bit_offset = bit_pos - word_pos * 64;
+  uint64_t& word = *(bitstring_begin + word_pos);
+  word |= (1ull << bit_offset);
+}
+
+inline void ResetBit(uint64_t* bitstring_begin, size_t bitstring_offset_bits,
+                     size_t bit_pos, bool val) noexcept {
+  bit_pos += bitstring_offset_bits;
+  size_t word_pos = bit_pos / 64;
+  size_t bit_offset = bit_pos - word_pos * 64;
+  uint64_t& word = *(bitstring_begin + word_pos);
+  word &= ~(1ull << bit_offset);
+}
+
+inline void FlipBit(uint64_t* bitstring_begin, size_t bitstring_offset_bits,
+                    size_t bit_pos) noexcept {
+  bit_pos += bitstring_offset_bits;
+  size_t word_pos = bit_pos / 64;
+  size_t bit_offset = bit_pos - word_pos * 64;
+  uint64_t& word = *(bitstring_begin + word_pos);
+  word ^= (1ull << bit_offset);
+}
+
 inline void WriteBit(uint64_t* bitstring_begin, size_t bitstring_offset_bits,
                      size_t bit_pos, bool val) noexcept {
   bit_pos += bitstring_offset_bits;
   size_t word_pos = bit_pos / 64;
   size_t bit_offset = bit_pos - word_pos * 64;
   uint64_t& word = *(bitstring_begin + word_pos);
-  word |= (1ull << bit_offset);
+  word ^= (-((int64_t)val) ^ word) & (1ull << bit_offset);
 }
 
 inline bool IsClauseSat(const uint64_t* bitstring_begin,
@@ -71,10 +99,23 @@ inline size_t CountSat(const uint64_t* result_begin, size_t result_offset_bits,
   return count;
 }
 
+inline size_t CountSat(const uint64_t* bitstring_begin,
+                       size_t bitstring_offset_bits, const int* cnf_begin,
+                       const int* cnf_end) noexcept {
+  size_t count = 0;
+  for (size_t i = 0; i < (cnf_end - cnf_begin) / 3; ++i) {
+    const int* clause = cnf_begin + 3 * i;
+    bool sat = IsClauseSat(bitstring_begin, bitstring_offset_bits, clause);
+    count += sat;
+  }
+  return count;
+}
+
 struct Population {
   uint64_t* individuals;
   size_t num_var;
   size_t size;
+  size_t newest;
 };
 
 inline size_t CountWord(Population population) {
@@ -85,6 +126,7 @@ inline Population CreatePopulation(size_t size, size_t num_var) {
   Population population;
   population.size = size;
   population.num_var = num_var;
+  population.newest = 0;
 
   size_t word_count = CountWord(population);
   size_t byte_count = word_count * 8;
@@ -106,36 +148,72 @@ inline void DestroyPopulation(Population population) {
   _mm_free(population.individuals);
 }
 
-/*
-struct Population {
-  uint64_t* solutions;
-  uint64_t* clause_sat_arrs;
-  uint32_t* clause_sat_freqencies;
-  size_t size;
-};
+static constexpr size_t kMaxTournamentSize = 64;
+inline void TournamentSelect(size_t* out_selected, const Population& population,
+                             size_t select_n, size_t tournament_size,
+                             const int* cnf_begin, const int* cnf_end) {
+  size_t candidadtes[kMaxTournamentSize];
+  for (std::size_t i = 0; i < tournament_size; ++i)
+    candidadtes[i] = rand() % population.size;
 
+  std::sort(
+      candidadtes, candidadtes + tournament_size, [&](size_t lhs, size_t rhs) {
+        return CountSat(population.individuals, population.num_var * lhs,
+                        cnf_begin, cnf_end) > CountSat(population.individuals,
+                                                       population.num_var * rhs,
+                                                       cnf_begin, cnf_end);
+      });
+  std::copy(candidadtes, candidadtes + select_n, out_selected);
+}
 
-inline void ComputeClauseSatArrs(const int* cnf_begin, const int* cnf_end,
-                                 const uint64_t* solutions_begin,
-                                 const uint64_t* solutions_end, uint64_t* dst,
-                                 size_t var_count) {
-  size_t clause_count = (cnf_end - cnf_begin) / 3;
-  for (size_t sol_bit_pos = 0;
-       sol_bit_pos < (solutions_end - solutions_begin) * 64;
-       sol_bit_pos += var_count) {
-    for (const int* clause = cnf_begin; clause < cnf_end; clause += 3) {
-      int sat_literal_count = 0;
-      for (const int* literal = clause; literal < clause + 3; ++literal) {
-        int idx = abs(*literal);
-        size_t var_bit_pos = sol_bit_pos + idx;
-        uint64_t word = *(solutions_begin + (var_bit_pos / 64));
-        int pos_in_word = var_bit_pos % 64;
-        bool var = word & (1ull << pos_in_word);
-        sat_literal_count += ((*literal > 0) == var);
+inline int Improvement(const uint64_t* bitstring, size_t bitstring_offset_bits,
+                       size_t flip_bit, const int* cnf_begin,
+                       const int* cnf_end) {
+  int before_sat_count =
+      CountSat(bitstring, bitstring_offset_bits, cnf_begin, cnf_end);
+  FlipBit((uint64_t*)bitstring, bitstring_offset_bits, flip_bit);
+  int after_sat_count =
+      CountSat(bitstring, bitstring_offset_bits, cnf_begin, cnf_end);
+  FlipBit((uint64_t*)bitstring, bitstring_offset_bits, flip_bit);
+  return after_sat_count - before_sat_count;
+}
+
+inline void CrossoverCC(size_t* out_child, size_t child_offset,
+                        uint64_t* parentx, size_t parentx_offset,
+                        uint64_t* parenty, size_t parenty_offset,
+                        size_t num_var, const int* cnf_begin,
+                        const int* cnf_end) noexcept {
+  for (size_t i = 0; i < num_var; ++i) {
+    bool use_parantx_bit = rand() % 2;
+    bool val = use_parantx_bit * ReadBit(parentx, parentx_offset, i) +
+               (1 - use_parantx_bit) * ReadBit(parenty, parenty_offset, i);
+    WriteBit(out_child, child_offset, i, val);
+  }
+
+  size_t num_clause = (cnf_end - cnf_begin) / 3;
+  size_t num_result_word = (num_clause + 63) / 64;
+  static uint64_t* parentx_result =
+      (uint64_t*)_mm_malloc(num_result_word * 8, 8);
+  static uint64_t* parenty_result =
+      (uint64_t*)_mm_malloc(num_result_word * 8, 8);
+  IsCnfSat(parentx_result, 0, parentx, parentx_offset, cnf_begin, cnf_end);
+  IsCnfSat(parenty_result, 0, parenty, parenty_offset, cnf_begin, cnf_end);
+  for (size_t i = 0; i < num_clause; ++i) {
+    int deltas[3];
+    if (!ReadBit(parentx_result, 0, i) && !ReadBit(parenty_result, 0, i)) {
+      for (size_t j = 0; j < 3; ++j) {
+        int literal = *(cnf_begin + 3 * i + j);
+        deltas[i] = Improvement(parentx, parentx_offset, abs(literal),
+                                cnf_begin, cnf_end) +
+                    Improvement(parenty, parenty_offset, abs(literal),
+                                cnf_begin, cnf_end);
       }
+      int* max_delta = std::max_element(deltas, deltas + 3);
+      int k = (max_delta - deltas);
+      WriteBit(out_child, child_offset, k,
+               !ReadBit(parentx, parentx_offset, k));
     }
   }
 }
 
-*/
 }  // namespace gntsat

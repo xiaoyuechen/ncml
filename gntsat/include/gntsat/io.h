@@ -4,6 +4,7 @@
 
 namespace gntsat {
 
-void PrintBitstring(const uint64_t* bitstring_begin, size_t bitstring_offset_bits, size_t num_var);
+void PrintBitstring(const uint64_t* bitstring_begin,
+                    size_t bitstring_offset_bits, size_t num_var);
 
 }  // namespace gntsat
