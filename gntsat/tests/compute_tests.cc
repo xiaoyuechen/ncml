@@ -14,6 +14,20 @@ TEST(ReadBitTest, CanReadBit) {
   }
 }
 
+TEST(WriteBitTest, CanWriteBit) {
+  uint64_t word = 0b0011010;
+  WriteBit(&word, 0, 2, false);
+  EXPECT_EQ(word, 0b0011010);
+  WriteBit(&word, 0, 2, true);
+  EXPECT_EQ(word, 0b0011110);
+}
+
+TEST(FlipBitTest, CanFlipBit) {
+  uint64_t word = 0b0011010;
+  FlipBit(&word, 0, 2);
+  EXPECT_EQ(word, 0b0011110);
+}
+
 TEST(IsClauseSatTest, CanTestSatClause) {
   int clause[3] = {-2, 4, 16};
   uint64_t word = 0;
