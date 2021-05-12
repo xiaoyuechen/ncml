@@ -53,4 +53,12 @@ TEST(InitPopulationTest, CanRandomInit) {
   }
 }
 
+TEST(BreakCountTest, CanBreakCount) {
+  uint64_t word = 0b0000010;
+  int cnf_arr[] = {1, 2, 3, 1, 5, 6};
+  int expectedCount = BreakCount(&word, 0, 1,
+                                 cnf_arr, cnf_arr + 6);
+  EXPECT_EQ(expectedCount, 2);
+}
+
 }  // namespace gntsat

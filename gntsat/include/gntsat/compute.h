@@ -170,6 +170,81 @@ inline int Improvement(const uint64_t* bitstring, size_t bitstring_offset_bits,
   return after_sat_count - before_sat_count;
 }
 
+inline int BreakCount(const uint64_t* bitstring, size_t bitstring_offset_bits,
+                      size_t flip_bit, const int* cnf_begin,
+                      const int* cnf_end) {
+  size_t num_clause = (cnf_end - cnf_begin) / 3;
+  size_t num_result_word = (num_clause + 63) / 64;
+  static uint64_t* originRes =
+      (uint64_t*)_mm_malloc(num_result_word * 8, 8);
+  static uint64_t* flipedRes =
+      (uint64_t*)_mm_malloc(num_result_word * 8, 8);
+  IsCnfSat(originRes, 0,
+           bitstring, bitstring_offset_bits, cnf_begin, cnf_end);
+  FlipBit((uint64_t*)bitstring, bitstring_offset_bits + flip_bit);
+  IsCnfSat(flipedRes, 0,
+           bitstring, bitstring_offset_bits, cnf_begin, cnf_end);
+  FlipBit((uint64_t*)bitstring, bitstring_offset_bits + flip_bit);
+
+  for (int i = 0; i < num_result_word; ++i) {
+    uint64_t andRes = originRes[i] & flipedRes[i];
+    originRes[i] ^= andRes;
+  }
+  return (int)CountSat(originRes, 0, num_clause);
+}
+
+inline void WalkMutation(uint64_t* bitstring,
+                         size_t bitstring_offset_bits,
+                         int MAX_FLIPS, float probability,
+                         const int* cnf_begin, const int* cnf_end) {
+  size_t num_clause = (cnf_end - cnf_begin) / 3;
+  size_t num_result_word = (num_clause + 63) / 64;
+  static uint64_t* originRes =
+      (uint64_t*)_mm_malloc(num_result_word * 8, 8);
+  static uint64_t* unsat_arr =
+      (uint64_t*)_mm_malloc(num_clause * 8, 8);
+  size_t currentSize = 0;
+  for (int i = 0; i < MAX_FLIPS; ++i) {
+    IsCnfSat(originRes, 0,
+             bitstring, bitstring_offset_bits, cnf_begin, cnf_end);
+    for (int j = 0; j < num_clause; ++j) {
+      if (!ReadBit(originRes, j)) {
+        unsat_arr[currentSize++] = j;
+      }
+    }
+    const int* clause = cnf_begin + rand() % currentSize;
+    currentSize = 0;
+    bool freebie_move_flag = false;
+    int break_count_arr[3] = {};
+    for (int k = 0; k < 3; ++k) {
+      int variable_c = abs(clause[k]);
+      break_count_arr[k] = BreakCount(bitstring, bitstring_offset_bits,
+                                      variable_c, cnf_begin, cnf_end);
+    }
+    for (int k = 0; k < 3; ++k) {
+      // Variable_c is the index of variable in one certain clause
+      int variable_c = abs(clause[k]);
+      if (break_count_arr[k] == 0) {
+        FlipBit(bitstring, bitstring_offset_bits + variable_c);
+        freebie_move_flag = true;
+        break;
+      }
+    }
+
+    // If there is not a freebie movement, then ..
+    if (!freebie_move_flag) {
+      if ((float(rand()) / RAND_MAX) < probability) {
+        int flip_index = rand() % 3;
+        FlipBit(bitstring, bitstring_offset_bits + abs(clause[flip_index]));
+      } else {
+        int* min_ele = std::min_element(break_count_arr, break_count_arr+3);
+        int flip_index = min_ele - break_count_arr;
+        FlipBit(bitstring, bitstring_offset_bits + abs(clause[flip_index]));
+      }
+    }
+  }
+}
+
 inline void CrossoverCC(uint64_t* out_child, size_t child_offset,
                         uint64_t* parentx, size_t parentx_offset,
                         uint64_t* parenty, size_t parenty_offset,
