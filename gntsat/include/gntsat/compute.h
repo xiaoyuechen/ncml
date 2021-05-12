@@ -190,11 +190,19 @@ inline void CrossoverCC(uint64_t* out_child, size_t child_offset,
       (uint64_t*)_mm_malloc(num_result_word * 8, 8);
   IsCnfSat(parentx_result, 0, parentx, parentx_offset, cnf_begin, cnf_end);
   IsCnfSat(parenty_result, 0, parenty, parenty_offset, cnf_begin, cnf_end);
+  static size_t* clause_idx_arr =
+      (size_t*)_mm_malloc(sizeof(size_t) * num_clause, sizeof(size_t));
+  for (size_t i = 0; i < num_clause; ++i) clause_idx_arr[i] = i;
+  std::random_device rd;
+  std::mt19937 g(rd());
+  std::shuffle(clause_idx_arr, clause_idx_arr + num_clause, g);
   for (size_t i = 0; i < num_clause; ++i) {
+    size_t clause_idx = clause_idx_arr[i];
     int deltas[3];
-    if (!ReadBit(parentx_result, i) && !ReadBit(parenty_result, i)) {
+    if (!ReadBit(parentx_result, clause_idx) &&
+        !ReadBit(parenty_result, clause_idx)) {
       for (size_t j = 0; j < 3; ++j) {
-        int literal = *(cnf_begin + 3 * i + j);
+        int literal = *(cnf_begin + 3 * clause_idx + j);
         deltas[j] = Improvement(parentx, parentx_offset, abs(literal),
                                 cnf_begin, cnf_end) +
                     Improvement(parenty, parenty_offset, abs(literal),

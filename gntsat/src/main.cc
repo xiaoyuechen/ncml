@@ -9,7 +9,7 @@ int main(int argc, const char* argv[]) {
   srand(time(0));
   auto problem = gntsat::readfile(argv[1]);
 
-  auto population = CreatePopulation(1024 * 8, problem.var_count);
+  auto population = CreatePopulation(128, problem.var_count);
 
   constexpr size_t best_size = 16;
   size_t bests[best_size];
