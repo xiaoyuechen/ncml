@@ -193,6 +193,7 @@ inline int BreakCount(const uint64_t* bitstring, size_t bitstring_offset_bits,
   return (int)CountSat(originRes, 0, num_clause);
 }
 
+
 inline void WalkMutation(uint64_t* bitstring,
                          size_t bitstring_offset_bits,
                          int MAX_FLIPS, float probability,
@@ -212,7 +213,7 @@ inline void WalkMutation(uint64_t* bitstring,
         unsat_arr[currentSize++] = j;
       }
     }
-    const int* clause = cnf_begin + rand() % currentSize;
+    const int* clause = cnf_begin + unsat_arr[rand() % currentSize] * 3;
     currentSize = 0;
     bool freebie_move_flag = false;
     int break_count_arr[3] = {};
