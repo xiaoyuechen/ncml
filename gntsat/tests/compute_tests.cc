@@ -10,21 +10,21 @@ TEST(ReadBitTest, CanReadBit) {
   uint64_t word = 0b0011010;
   auto bitset = std::bitset<64>(word);
   for (size_t i = 0; i < 64; ++i) {
-    EXPECT_EQ(bitset[i], ReadBit(&word, 0, i));
+    EXPECT_EQ(bitset[i], ReadBit(&word, i));
   }
 }
 
 TEST(WriteBitTest, CanWriteBit) {
   uint64_t word = 0b0011010;
-  WriteBit(&word, 0, 2, false);
+  WriteBit(&word, 2, false);
   EXPECT_EQ(word, 0b0011010);
-  WriteBit(&word, 0, 2, true);
+  WriteBit(&word, 2, true);
   EXPECT_EQ(word, 0b0011110);
 }
 
 TEST(FlipBitTest, CanFlipBit) {
   uint64_t word = 0b0011010;
-  FlipBit(&word, 0, 2);
+  FlipBit(&word, 2);
   EXPECT_EQ(word, 0b0011110);
 }
 
