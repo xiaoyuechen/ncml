@@ -1,7 +1,7 @@
 #pragma once
 
 #include <xmmintrin.h>
-
+#include <iostream>
 #include <algorithm>
 #include <bitset>
 #include <cstddef>
@@ -212,6 +212,10 @@ inline void WalkMutation(uint64_t* bitstring,
       if (!ReadBit(originRes, j)) {
         unsat_arr[currentSize++] = j;
       }
+    }
+    if (currentSize == 0) {
+//      std::cout << "🐎" << std::endl;
+      return;
     }
     const int* clause = cnf_begin + unsat_arr[rand() % currentSize] * 3;
     currentSize = 0;
