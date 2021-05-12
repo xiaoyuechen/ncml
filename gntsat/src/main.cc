@@ -9,7 +9,7 @@ int main(int argc, const char* argv[]) {
   srand(time(0));
   auto problem = gntsat::readfile(argv[1]);
 
-  auto population = CreatePopulation(20, problem.var_count);
+  auto population = CreatePopulation(1024 * 8, problem.var_count);
 
   constexpr size_t best_size = 16;
   size_t bests[best_size];
@@ -34,12 +34,12 @@ int main(int argc, const char* argv[]) {
                    population.num_var);
     printf("\n");
 
-    for (size_t i = 0; i < population.size * population.num_var;
-         i += population.num_var) {
-      PrintBitstring(population.individuals, i, population.num_var);
-      if (i / population.num_var == population.newest) printf("<<======");
-      printf("\n");
-    }
+    //    for (size_t i = 0; i < population.size * population.num_var;
+    //         i += population.num_var) {
+    //      PrintBitstring(population.individuals, i, population.num_var);
+    //      if (i / population.num_var == population.newest) printf("<<======");
+    //      printf("\n");
+    //    }
 
     TournamentSelect(bests, population, best_size, 64, cnf_begin, cnf_end);
     size_t parentx = rand() % best_size;
@@ -55,8 +55,8 @@ int main(int argc, const char* argv[]) {
                  bests[best_size - 1] * population.num_var, cnf_begin,
                  cnf_end) < CountSat(child_buffer, 0, cnf_begin, cnf_end)) {
       for (size_t i = 0; i < population.num_var; ++i) {
-        bool bit = ReadBit(child_buffer, 0, i);
-        WriteBit(population.individuals, oldest * population.num_var, i, bit);
+        bool bit = ReadBit(child_buffer, i);
+        WriteBit(population.individuals, oldest * population.num_var, bit);
       }
       population.newest = oldest;
     }
