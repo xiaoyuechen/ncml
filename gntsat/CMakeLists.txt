@@ -24,9 +24,11 @@ target_include_directories(gntsat-lib
 
 
 add_executable(gntsat src/main.cc)
-
 target_link_libraries(gntsat PRIVATE gntsat-lib)
 
+
+add_executable(walksat src/walksat.cc)
+target_link_libraries(walksat PRIVATE gntsat-lib)
 
 add_subdirectory(extern)
 add_subdirectory(tests)
