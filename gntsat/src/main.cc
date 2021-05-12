@@ -9,7 +9,7 @@ int main(int argc, const char* argv[]) {
   srand(time(0));
   auto problem = gntsat::readfile(argv[1]);
 
-  auto population = CreatePopulation(16,
+  auto population = CreatePopulation(1000,
                                      problem.var_count + 1);
 
   constexpr size_t best_size = 4;
@@ -34,6 +34,10 @@ int main(int argc, const char* argv[]) {
     PrintBitstring(population.individuals, best_individual_offset,
                    population.num_var);
     printf("\n");
+    if (most_sat == problem.cnf.size()) {
+      std::cout << "=== 🐂 ===" << std::endl;
+      break;
+    }
 
 //        for (size_t i = 0; i < population.size * population.num_var;
 //             i += population.num_var) {
@@ -42,35 +46,35 @@ int main(int argc, const char* argv[]) {
 //          printf("\n");
 //        }
 
-    TournamentSelect(bests, population, best_size, 8, cnf_begin, cnf_end);
+    TournamentSelect(bests, population, best_size, 64, cnf_begin, cnf_end);
     size_t parentx = rand() % best_size;
     size_t parenty = rand() % best_size;
     while (parentx == parenty) {
       parenty = rand() % best_size;
     }
-    PrintBitstring(population.individuals, parentx * population.num_var, population.num_var);
-    std::cout << std::endl;
-    PrintBitstring(population.individuals, parenty * population.num_var, population.num_var);
-    std::cout << std::endl;
+//    PrintBitstring(population.individuals, parentx * population.num_var, population.num_var);
+//    std::cout << std::endl;
+//    PrintBitstring(population.individuals, parenty * population.num_var, population.num_var);
+//    std::cout << std::endl;
     CrossoverCC(child_buffer, 0, population.individuals,
                 parentx * population.num_var, population.individuals,
                 parenty * population.num_var, population.num_var, cnf_begin,
                 cnf_end);
-    std::cout << "Before Mutation" << std::endl;
-    PrintBitstring(child_buffer, 0, population.num_var);
-    std::cout << std::endl;
-    WalkMutation(child_buffer, 0, 8, 0.4, cnf_begin, cnf_end);
-    std::cout << "After Mutation" << std::endl;
-    PrintBitstring(child_buffer, 0, population.num_var);
-    std::cout << std::endl;
-    std::cout << "👀" << std::endl;
+//    std::cout << "Before Mutation" << std::endl;
+//    PrintBitstring(child_buffer, 0, population.num_var);
+//    std::cout << std::endl;
+    WalkMutation(child_buffer, 0, 1000, 0.57, cnf_begin, cnf_end);
+//    std::cout << "After Mutation" << std::endl;
+//    PrintBitstring(child_buffer, 0, population.num_var);
+//    std::cout << std::endl;
+//    std::cout << "👀" << std::endl;
     size_t oldest = (population.newest + 1) % population.size;
     if (CountSat(population.individuals,
                  bests[best_size - 1] * population.num_var, cnf_begin,
                  cnf_end) < CountSat(child_buffer, 0, cnf_begin, cnf_end)) {
       for (size_t i = 0; i < population.num_var; ++i) {
         bool bit = ReadBit(child_buffer, i);
-        WriteBit(population.individuals, oldest * population.num_var, bit);
+        WriteBit(population.individuals, oldest * population.num_var + i, bit);
       }
       population.newest = oldest;
     }
