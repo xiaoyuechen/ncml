@@ -56,7 +56,8 @@ int main(int argc, const char* argv[]) {
 //    std::cout << std::endl;
 //    PrintBitstring(population.individuals, parenty * population.num_var, population.num_var);
 //    std::cout << std::endl;
-    CrossoverUniform(child_buffer, 0, population.individuals,
+
+    CrossoverFF(child_buffer, population.individuals,
                 parentx * population.num_var, population.individuals,
                 parenty * population.num_var, population.num_var, cnf_begin,
                 cnf_end);
