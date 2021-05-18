@@ -1,3 +1,5 @@
+#include <chrono>
+
 #include "gntsat/compute.h"
 #include "gntsat/io.h"
 #include "gntsat/parser.h"
@@ -16,6 +18,7 @@ void RandomInit(uint64_t* out_solution, size_t num_var) {
 }
 
 int main(int argc, const char* argv[]) {
+  const auto start = std::chrono::steady_clock::now();
   using namespace gntsat;
   srand(time(0));
   auto problem = gntsat::readfile(argv[1]);
@@ -37,5 +40,10 @@ int main(int argc, const char* argv[]) {
   }
 
 SAT:
-  printf("!!!!!!!!!!!!!!!!!!!!");
+  printf("!!!!!!!!!!!!!!!!!!!!\n");
+  const auto end = std::chrono::steady_clock::now();
+  int ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - start)
+               .count();
+  printf("TIME: %d\n", ms);
+  printf("FS: %llu\n", g_num_flips);
 }

@@ -12,6 +12,8 @@
 
 namespace gntsat {
 
+inline size_t g_num_flips = 0;
+
 inline bool ReadBit(const uint64_t* bitstring_begin, size_t bit_pos) noexcept {
   size_t word_pos = bit_pos / 64;
   size_t bit_offset = bit_pos - word_pos * 64;
@@ -20,6 +22,7 @@ inline bool ReadBit(const uint64_t* bitstring_begin, size_t bit_pos) noexcept {
 }
 
 inline void SetBit(uint64_t* bitstring_begin, size_t bit_pos) noexcept {
+  ++g_num_flips;
   size_t word_pos = bit_pos / 64;
   size_t bit_offset = bit_pos - word_pos * 64;
   uint64_t& word = *(bitstring_begin + word_pos);
@@ -28,6 +31,7 @@ inline void SetBit(uint64_t* bitstring_begin, size_t bit_pos) noexcept {
 
 inline void ResetBit(uint64_t* bitstring_begin, size_t bit_pos,
                      bool val) noexcept {
+  ++g_num_flips;
   size_t word_pos = bit_pos / 64;
   size_t bit_offset = bit_pos - word_pos * 64;
   uint64_t& word = *(bitstring_begin + word_pos);
@@ -35,6 +39,7 @@ inline void ResetBit(uint64_t* bitstring_begin, size_t bit_pos,
 }
 
 inline void FlipBit(uint64_t* bitstring_begin, size_t bit_pos) noexcept {
+  ++g_num_flips;
   size_t word_pos = bit_pos / 64;
   size_t bit_offset = bit_pos - word_pos * 64;
   uint64_t& word = *(bitstring_begin + word_pos);
@@ -43,6 +48,7 @@ inline void FlipBit(uint64_t* bitstring_begin, size_t bit_pos) noexcept {
 
 inline void WriteBit(uint64_t* bitstring_begin, size_t bit_pos,
                      bool val) noexcept {
+  ++g_num_flips;
   size_t word_pos = bit_pos / 64;
   size_t bit_offset = bit_pos - word_pos * 64;
   uint64_t& word = *(bitstring_begin + word_pos);

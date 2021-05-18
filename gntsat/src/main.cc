@@ -111,5 +111,6 @@ int main(int argc, const char* argv[]) {
   int ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - start)
                .count();
   printf("TIME: %d\n", ms);
+  printf("FS: %llu\n", g_num_flips);
   return 0;
 }
