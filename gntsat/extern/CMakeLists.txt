@@ -9,13 +9,10 @@ set(INSTALL_GTEST
 	OFF
 	CACHE BOOL "" FORCE)
 
-if(MSVC)
-	set(gtest_force_shared_crt
-		ON
-		CACHE BOOL "" FORCE)
-endif()
-
 FetchContent_MakeAvailable(googletest)
 
 set_target_properties(gtest gtest_main gmock gmock_main
 	PROPERTIES FOLDER "googletest")
+
+target_compile_options(gtest PRIVATE -w)
+
