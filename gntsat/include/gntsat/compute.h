@@ -241,7 +241,6 @@ inline void WalkMutation(uint64_t* bitstring, size_t bitstring_offset_bits,
   }
 }
 
-
 inline void CrossoverUniform(uint64_t* out_child, const uint64_t* parentx,
                              size_t parentx_offset, const uint64_t* parenty,
                              size_t parenty_offset, size_t num_var) noexcept {
@@ -322,5 +321,62 @@ inline void CrossoverFF(uint64_t* out_child, const uint64_t* parentx,
     }
   }
 }
+inline void CrossoverOnePoint(uint64_t* out_child1, size_t child1_offset,
+                              uint64_t* out_child2, size_t child2_offset,
+                              uint64_t* parentx, size_t parentx_offset,
+                              uint64_t* parenty, size_t parenty_offset,
+                              size_t num_var, const int* cnf_begin,
+                              const int* cnf_end) noexcept {
+  int point =
+      rand() % num_var;  // randomly select a point for swapping two individuals
+  for (size_t i = 0; i < point; ++i) {
+    bool val1 = ReadBit(parentx, parentx_offset + i);
+    WriteBit(out_child1, child1_offset + i, val1);
+    bool val2 = ReadBit(parenty, parenty_offset + i);
+    WriteBit(out_child2, child2_offset + i, val2);
+  }
+  for (size_t i = point; i < num_var; ++i) {
+    bool val1 = ReadBit(parenty, parenty_offset + i);
+    WriteBit(out_child1, child1_offset + i, val1);
+    bool val2 = ReadBit(parentx, parentx_offset + i);
+    WriteBit(out_child2, child2_offset + i, val2);
+  }
+}
 
+inline void CrossoverTwoPoint(uint64_t* out_child1, size_t child1_offset,
+                              uint64_t* out_child2, size_t child2_offset,
+                              uint64_t* parentx, size_t parentx_offset,
+                              uint64_t* parenty, size_t parenty_offset,
+                              size_t num_var, const int* cnf_begin,
+                              const int* cnf_end) noexcept {
+  int point1 =
+      rand() % num_var;  // randomly select a point for swapping two individuals
+  int point2 = rand() % num_var;
+  while (point1 == point2) {
+    point2 = rand() % num_var;
+  }
+  if (point1 > point2) {
+    int temp = point1;
+    point1 = point2;
+    point2 = temp;
+  }
+  for (size_t i = 0; i < point1; ++i) {
+    bool val1 = ReadBit(parentx, parentx_offset + i);
+    WriteBit(out_child1, child1_offset + i, val1);
+    bool val2 = ReadBit(parenty, parenty_offset + i);
+    WriteBit(out_child2, child2_offset + i, val2);
+  }
+  for (size_t i = point1; i < point2; ++i) {
+    bool val1 = ReadBit(parenty, parenty_offset + i);
+    WriteBit(out_child1, child1_offset + i, val1);
+    bool val2 = ReadBit(parentx, parentx_offset + i);
+    WriteBit(out_child2, child2_offset + i, val2);
+  }
+  for (size_t i = point2; i < num_var; ++i) {
+    bool val1 = ReadBit(parentx, parentx_offset + i);
+    WriteBit(out_child1, child1_offset + i, val1);
+    bool val2 = ReadBit(parenty, parenty_offset + i);
+    WriteBit(out_child2, child2_offset + i, val2);
+  }
 }  // namespace gntsat
+}
