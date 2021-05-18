@@ -1,12 +1,13 @@
 #pragma once
 
 #include <xmmintrin.h>
-#include <iostream>
+
 #include <algorithm>
 #include <bitset>
 #include <cstddef>
 #include <cstdint>
 #include <cstdlib>
+#include <iostream>
 #include <random>
 
 namespace gntsat {
@@ -175,15 +176,11 @@ inline int BreakCount(const uint64_t* bitstring, size_t bitstring_offset_bits,
                       const int* cnf_end) {
   size_t num_clause = (cnf_end - cnf_begin) / 3;
   size_t num_result_word = (num_clause + 63) / 64;
-  static uint64_t* originRes =
-      (uint64_t*)_mm_malloc(num_result_word * 8, 8);
-  static uint64_t* flipedRes =
-      (uint64_t*)_mm_malloc(num_result_word * 8, 8);
-  IsCnfSat(originRes, 0,
-           bitstring, bitstring_offset_bits, cnf_begin, cnf_end);
+  static uint64_t* originRes = (uint64_t*)_mm_malloc(num_result_word * 8, 8);
+  static uint64_t* flipedRes = (uint64_t*)_mm_malloc(num_result_word * 8, 8);
+  IsCnfSat(originRes, 0, bitstring, bitstring_offset_bits, cnf_begin, cnf_end);
   FlipBit((uint64_t*)bitstring, bitstring_offset_bits + flip_bit);
-  IsCnfSat(flipedRes, 0,
-           bitstring, bitstring_offset_bits, cnf_begin, cnf_end);
+  IsCnfSat(flipedRes, 0, bitstring, bitstring_offset_bits, cnf_begin, cnf_end);
   FlipBit((uint64_t*)bitstring, bitstring_offset_bits + flip_bit);
 
   for (int i = 0; i < num_result_word; ++i) {
@@ -193,28 +190,24 @@ inline int BreakCount(const uint64_t* bitstring, size_t bitstring_offset_bits,
   return (int)CountSat(originRes, 0, num_clause);
 }
 
-
-inline void WalkMutation(uint64_t* bitstring,
-                         size_t bitstring_offset_bits,
-                         int MAX_FLIPS, float probability,
-                         const int* cnf_begin, const int* cnf_end) {
+inline void WalkMutation(uint64_t* bitstring, size_t bitstring_offset_bits,
+                         int MAX_FLIPS, float probability, const int* cnf_begin,
+                         const int* cnf_end) {
   size_t num_clause = (cnf_end - cnf_begin) / 3;
   size_t num_result_word = (num_clause + 63) / 64;
-  static uint64_t* originRes =
-      (uint64_t*)_mm_malloc(num_result_word * 8, 8);
-  static uint64_t* unsat_arr =
-      (uint64_t*)_mm_malloc(num_clause * 8, 8);
+  static uint64_t* originRes = (uint64_t*)_mm_malloc(num_result_word * 8, 8);
+  static uint64_t* unsat_arr = (uint64_t*)_mm_malloc(num_clause * 8, 8);
   size_t currentSize = 0;
   for (int i = 0; i < MAX_FLIPS; ++i) {
-    IsCnfSat(originRes, 0,
-             bitstring, bitstring_offset_bits, cnf_begin, cnf_end);
+    IsCnfSat(originRes, 0, bitstring, bitstring_offset_bits, cnf_begin,
+             cnf_end);
     for (int j = 0; j < num_clause; ++j) {
       if (!ReadBit(originRes, j)) {
         unsat_arr[currentSize++] = j;
       }
     }
     if (currentSize == 0) {
-//      std::cout << "🐎" << std::endl;
+      //      std::cout << "🐎" << std::endl;
       return;
     }
     const int* clause = cnf_begin + unsat_arr[rand() % currentSize] * 3;
@@ -238,11 +231,11 @@ inline void WalkMutation(uint64_t* bitstring,
 
     // If there is not a freebie movement, then ..
     if (!freebie_move_flag) {
-      if ((float(rand()) / RAND_MAX) < probability) {
+      if ((rand() / (double)RAND_MAX) < probability) {
         int flip_index = rand() % 3;
         FlipBit(bitstring, bitstring_offset_bits + abs(clause[flip_index]));
       } else {
-        int* min_ele = std::min_element(break_count_arr, break_count_arr+3);
+        int* min_ele = std::min_element(break_count_arr, break_count_arr + 3);
         int flip_index = min_ele - break_count_arr;
         FlipBit(bitstring, bitstring_offset_bits + abs(clause[flip_index]));
       }
@@ -250,17 +243,23 @@ inline void WalkMutation(uint64_t* bitstring,
   }
 }
 
-inline void CrossoverCC(uint64_t* out_child, size_t child_offset,
-                        uint64_t* parentx, size_t parentx_offset,
-                        uint64_t* parenty, size_t parenty_offset,
-                        size_t num_var, const int* cnf_begin,
-                        const int* cnf_end) noexcept {
+inline void CrossoverUniform(uint64_t* out_child, const uint64_t* parentx,
+                             size_t parentx_offset, const uint64_t* parenty,
+                             size_t parenty_offset, size_t num_var) noexcept {
   for (size_t i = 0; i < num_var; ++i) {
     bool use_parantx_bit = rand() % 2;
     bool val = use_parantx_bit * ReadBit(parentx, parentx_offset + i) +
                (1 - use_parantx_bit) * ReadBit(parenty, parenty_offset + i);
-    WriteBit(out_child, child_offset + i, val);
+    WriteBit(out_child, i, val);
   }
+}
+
+inline void CrossoverCC(uint64_t* out_child, const uint64_t* parentx,
+                        size_t parentx_offset, const uint64_t* parenty,
+                        size_t parenty_offset, size_t num_var,
+                        const int* cnf_begin, const int* cnf_end) noexcept {
+  CrossoverUniform(out_child, parentx, parentx_offset, parenty, parenty_offset,
+                   num_var);
 
   size_t num_clause = (cnf_end - cnf_begin) / 3;
   size_t num_result_word = (num_clause + 63) / 64;
@@ -282,8 +281,45 @@ inline void CrossoverCC(uint64_t* out_child, size_t child_offset,
       }
       int* max_delta = std::max_element(deltas, deltas + 3);
       int k = (max_delta - deltas);
-      WriteBit(out_child, child_offset + k,
-               !ReadBit(parentx, parentx_offset + k));
+      WriteBit(out_child, k, !ReadBit(parentx, parentx_offset + k));
+    }
+  }
+}
+
+inline void CrossoverFF(uint64_t* out_child, const uint64_t* parentx,
+                        size_t parentx_offset, const uint64_t* parenty,
+                        size_t parenty_offset, size_t num_var,
+                        const int* cnf_begin, const int* cnf_end) noexcept {
+  CrossoverUniform(out_child, parentx, parentx_offset, parenty, parenty_offset,
+                   num_var);
+
+  size_t num_clause = (cnf_end - cnf_begin) / 3;
+  size_t num_result_word = (num_clause + 63) / 64;
+  static uint64_t* parentx_result =
+      (uint64_t*)_mm_malloc(num_result_word * 8, 8);
+  static uint64_t* parenty_result =
+      (uint64_t*)_mm_malloc(num_result_word * 8, 8);
+  IsCnfSat(parentx_result, 0, parentx, parentx_offset, cnf_begin, cnf_end);
+  IsCnfSat(parenty_result, 0, parenty, parenty_offset, cnf_begin, cnf_end);
+
+  for (size_t i = 0; i < num_clause; ++i) {
+    const uint64_t* chosen_parent = nullptr;
+    size_t chosen_parent_offset = 0;
+    if (ReadBit(parentx_result, i) && !ReadBit(parenty_result, i)) {
+      chosen_parent = parentx;
+      chosen_parent_offset = parentx_offset;
+    } else if (!ReadBit(parentx_result, i) && ReadBit(parenty_result, i)) {
+      chosen_parent = parenty;
+      chosen_parent_offset = parentx_offset;
+    }
+
+    if (chosen_parent) {
+      const int* clause = cnf_begin + 3 * i;
+      for (size_t i = 0; i < 3; ++i) {
+        size_t bit_pos = abs(clause[i]);
+        WriteBit(out_child, bit_pos,
+                 ReadBit(chosen_parent, chosen_parent_offset));
+      }
     }
   }
 }
