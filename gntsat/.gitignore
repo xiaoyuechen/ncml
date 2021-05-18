@@ -2,3 +2,5 @@ build
 .idea
 .cache
 cmake-build-debug
+.gdb_history
+minisat
