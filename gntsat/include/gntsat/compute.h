@@ -61,14 +61,13 @@ inline bool IsClauseSat(const uint64_t* bitstring_begin,
   return sat_literal_count;
 }
 
-inline void IsCnfSat(uint64_t* out_result, size_t result_offset_bits,
-                     const uint64_t* bitstring_begin,
+inline void IsCnfSat(uint64_t* out_result, const uint64_t* bitstring_begin,
                      size_t bitstring_offset_bits, const int* cnf_begin,
                      const int* cnf_end) noexcept {
   for (size_t i = 0; i < (cnf_end - cnf_begin) / 3; ++i) {
     const int* clause = cnf_begin + 3 * i;
     bool sat = IsClauseSat(bitstring_begin, bitstring_offset_bits, clause);
-    WriteBit(out_result, result_offset_bits + i, sat);
+    WriteBit(out_result, i, sat);
   }
 }
 
@@ -178,9 +177,9 @@ inline int BreakCount(const uint64_t* bitstring, size_t bitstring_offset_bits,
   size_t num_result_word = (num_clause + 63) / 64;
   static uint64_t* originRes = (uint64_t*)_mm_malloc(num_result_word * 8, 8);
   static uint64_t* flipedRes = (uint64_t*)_mm_malloc(num_result_word * 8, 8);
-  IsCnfSat(originRes, 0, bitstring, bitstring_offset_bits, cnf_begin, cnf_end);
+  IsCnfSat(originRes, bitstring, bitstring_offset_bits, cnf_begin, cnf_end);
   FlipBit((uint64_t*)bitstring, bitstring_offset_bits + flip_bit);
-  IsCnfSat(flipedRes, 0, bitstring, bitstring_offset_bits, cnf_begin, cnf_end);
+  IsCnfSat(flipedRes, bitstring, bitstring_offset_bits, cnf_begin, cnf_end);
   FlipBit((uint64_t*)bitstring, bitstring_offset_bits + flip_bit);
 
   for (int i = 0; i < num_result_word; ++i) {
@@ -199,8 +198,7 @@ inline void WalkMutation(uint64_t* bitstring, size_t bitstring_offset_bits,
   static uint64_t* unsat_arr = (uint64_t*)_mm_malloc(num_clause * 8, 8);
   size_t currentSize = 0;
   for (int i = 0; i < MAX_FLIPS; ++i) {
-    IsCnfSat(originRes, 0, bitstring, bitstring_offset_bits, cnf_begin,
-             cnf_end);
+    IsCnfSat(originRes, bitstring, bitstring_offset_bits, cnf_begin, cnf_end);
     for (int j = 0; j < num_clause; ++j) {
       if (!ReadBit(originRes, j)) {
         unsat_arr[currentSize++] = j;
@@ -267,8 +265,8 @@ inline void CrossoverCC(uint64_t* out_child, const uint64_t* parentx,
       (uint64_t*)_mm_malloc(num_result_word * 8, 8);
   static uint64_t* parenty_result =
       (uint64_t*)_mm_malloc(num_result_word * 8, 8);
-  IsCnfSat(parentx_result, 0, parentx, parentx_offset, cnf_begin, cnf_end);
-  IsCnfSat(parenty_result, 0, parenty, parenty_offset, cnf_begin, cnf_end);
+  IsCnfSat(parentx_result, parentx, parentx_offset, cnf_begin, cnf_end);
+  IsCnfSat(parenty_result, parenty, parenty_offset, cnf_begin, cnf_end);
   for (size_t i = 0; i < num_clause; ++i) {
     int deltas[3];
     if (!ReadBit(parentx_result, i) && !ReadBit(parenty_result, i)) {
@@ -299,8 +297,8 @@ inline void CrossoverFF(uint64_t* out_child, const uint64_t* parentx,
       (uint64_t*)_mm_malloc(num_result_word * 8, 8);
   static uint64_t* parenty_result =
       (uint64_t*)_mm_malloc(num_result_word * 8, 8);
-  IsCnfSat(parentx_result, 0, parentx, parentx_offset, cnf_begin, cnf_end);
-  IsCnfSat(parenty_result, 0, parenty, parenty_offset, cnf_begin, cnf_end);
+  IsCnfSat(parentx_result, parentx, parentx_offset, cnf_begin, cnf_end);
+  IsCnfSat(parenty_result, parenty, parenty_offset, cnf_begin, cnf_end);
 
   for (size_t i = 0; i < num_clause; ++i) {
     const uint64_t* chosen_parent = nullptr;
