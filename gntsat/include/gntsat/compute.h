@@ -250,6 +250,19 @@ inline void WalkMutation(uint64_t* bitstring,
   }
 }
 
+inline void CrossoverUniform(uint64_t* out_child, size_t child_offset,
+                        uint64_t* parentx, size_t parentx_offset,
+                        uint64_t* parenty, size_t parenty_offset,
+                        size_t num_var, const int* cnf_begin,
+                        const int* cnf_end) noexcept {
+  for (size_t i = 0; i < num_var; ++i) {
+    bool use_parantx_bit = rand() % 2;
+    bool val = use_parantx_bit * ReadBit(parentx, parentx_offset + i) +
+               (1 - use_parantx_bit) * ReadBit(parenty, parenty_offset + i);
+    WriteBit(out_child, child_offset + i, val);
+  }
+}
+
 inline void CrossoverCC(uint64_t* out_child, size_t child_offset,
                         uint64_t* parentx, size_t parentx_offset,
                         uint64_t* parenty, size_t parenty_offset,
