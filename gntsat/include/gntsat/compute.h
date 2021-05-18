@@ -279,7 +279,9 @@ inline void CrossoverCC(uint64_t* out_child, const uint64_t* parentx,
       }
       int* max_delta = std::max_element(deltas, deltas + 3);
       int k = (max_delta - deltas);
-      WriteBit(out_child, k, !ReadBit(parentx, parentx_offset + k));
+      const int literal = *(cnf_begin + 3 * i + k);
+      size_t bit_pos = abs(literal);
+      WriteBit(out_child, bit_pos, !ReadBit(parentx, parentx_offset + bit_pos));
     }
   }
 }
@@ -308,7 +310,7 @@ inline void CrossoverFF(uint64_t* out_child, const uint64_t* parentx,
       chosen_parent_offset = parentx_offset;
     } else if (!ReadBit(parentx_result, i) && ReadBit(parenty_result, i)) {
       chosen_parent = parenty;
-      chosen_parent_offset = parentx_offset;
+      chosen_parent_offset = parenty_offset;
     }
 
     if (chosen_parent) {
@@ -316,39 +318,36 @@ inline void CrossoverFF(uint64_t* out_child, const uint64_t* parentx,
       for (size_t i = 0; i < 3; ++i) {
         size_t bit_pos = abs(clause[i]);
         WriteBit(out_child, bit_pos,
-                 ReadBit(chosen_parent, chosen_parent_offset));
+                 ReadBit(chosen_parent, chosen_parent_offset + bit_pos));
       }
     }
   }
 }
-inline void CrossoverOnePoint(uint64_t* out_child1, size_t child1_offset,
-                              uint64_t* out_child2, size_t child2_offset,
-                              uint64_t* parentx, size_t parentx_offset,
-                              uint64_t* parenty, size_t parenty_offset,
-                              size_t num_var, const int* cnf_begin,
-                              const int* cnf_end) noexcept {
+
+inline void CrossoverOnePoint(uint64_t* out_child1, uint64_t* out_child2,
+                              const uint64_t* parentx, size_t parentx_offset,
+                              const uint64_t* parenty, size_t parenty_offset,
+                              size_t num_var) noexcept {
   int point =
       rand() % num_var;  // randomly select a point for swapping two individuals
   for (size_t i = 0; i < point; ++i) {
     bool val1 = ReadBit(parentx, parentx_offset + i);
-    WriteBit(out_child1, child1_offset + i, val1);
+    WriteBit(out_child1, i, val1);
     bool val2 = ReadBit(parenty, parenty_offset + i);
-    WriteBit(out_child2, child2_offset + i, val2);
+    WriteBit(out_child2, i, val2);
   }
   for (size_t i = point; i < num_var; ++i) {
     bool val1 = ReadBit(parenty, parenty_offset + i);
-    WriteBit(out_child1, child1_offset + i, val1);
+    WriteBit(out_child1, i, val1);
     bool val2 = ReadBit(parentx, parentx_offset + i);
-    WriteBit(out_child2, child2_offset + i, val2);
+    WriteBit(out_child2, i, val2);
   }
 }
 
-inline void CrossoverTwoPoint(uint64_t* out_child1, size_t child1_offset,
-                              uint64_t* out_child2, size_t child2_offset,
+inline void CrossoverTwoPoint(uint64_t* out_child1, uint64_t* out_child2,
                               uint64_t* parentx, size_t parentx_offset,
                               uint64_t* parenty, size_t parenty_offset,
-                              size_t num_var, const int* cnf_begin,
-                              const int* cnf_end) noexcept {
+                              size_t num_var) noexcept {
   int point1 =
       rand() % num_var;  // randomly select a point for swapping two individuals
   int point2 = rand() % num_var;
@@ -362,21 +361,21 @@ inline void CrossoverTwoPoint(uint64_t* out_child1, size_t child1_offset,
   }
   for (size_t i = 0; i < point1; ++i) {
     bool val1 = ReadBit(parentx, parentx_offset + i);
-    WriteBit(out_child1, child1_offset + i, val1);
+    WriteBit(out_child1, i, val1);
     bool val2 = ReadBit(parenty, parenty_offset + i);
-    WriteBit(out_child2, child2_offset + i, val2);
+    WriteBit(out_child2, i, val2);
   }
   for (size_t i = point1; i < point2; ++i) {
     bool val1 = ReadBit(parenty, parenty_offset + i);
-    WriteBit(out_child1, child1_offset + i, val1);
+    WriteBit(out_child1, i, val1);
     bool val2 = ReadBit(parentx, parentx_offset + i);
-    WriteBit(out_child2, child2_offset + i, val2);
+    WriteBit(out_child2, i, val2);
   }
   for (size_t i = point2; i < num_var; ++i) {
     bool val1 = ReadBit(parentx, parentx_offset + i);
-    WriteBit(out_child1, child1_offset + i, val1);
+    WriteBit(out_child1, i, val1);
     bool val2 = ReadBit(parenty, parenty_offset + i);
-    WriteBit(out_child2, child2_offset + i, val2);
+    WriteBit(out_child2, i, val2);
   }
 }  // namespace gntsat
 }

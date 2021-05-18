@@ -47,10 +47,10 @@ int main(int argc, const char* argv[]) {
 //        }
 
     TournamentSelect(bests, population, best_size, 64, cnf_begin, cnf_end);
-    size_t parentx = rand() % best_size;
-    size_t parenty = rand() % best_size;
+    size_t parentx = bests[rand() % best_size];
+    size_t parenty = bests[rand() % best_size];
     while (parentx == parenty) {
-      parenty = rand() % best_size;
+      parenty = bests[rand() % best_size];
     }
 //    PrintBitstring(population.individuals, parentx * population.num_var, population.num_var);
 //    std::cout << std::endl;
