@@ -31,7 +31,7 @@ int main(int argc, const char* argv[]) {
 
   while (true) {
     RandomInit(solution, problem.var_count + 1);
-    WalkMutation(solution, 0, 1000, 0.57, cnf_begin, cnf_end);
+    WalkMutation(solution, 0, 100, 0.57, cnf_begin, cnf_end);
     size_t sat = CountSat(solution, 0, cnf_begin, cnf_end);
     if (sat == problem.cnf.size()) goto SAT;
     PrintBitstring(solution, 0, problem.var_count + 1);

@@ -16,10 +16,15 @@ enum class CrossOverType {
   _COUNT,
 };
 
+constexpr size_t kPopulationSize = 128;
+constexpr size_t kBestSize = 4;
+constexpr size_t kMaxFlip = 100;
+constexpr float kWalkChance = 0.57;
+constexpr size_t kTournamentSize = 32;
+
 int main(int argc, const char* argv[]) {
   const auto start = std::chrono::steady_clock::now();
   auto crossover_type = CrossOverType::UNIFORM;
-  // --crossover=cc
   std::string crossover_names[] = {"cc", "ff", "uniform", "onepoint",
                                    "twopoint"};
   for (int i = 1; i < argc - 1; ++i) {
@@ -42,13 +47,14 @@ int main(int argc, const char* argv[]) {
   srand(time(0));
   auto problem = gntsat::readfile(argv[argc - 1]);
 
-  auto population = CreatePopulation(1000, problem.var_count + 1);
+  auto population = CreatePopulation(kPopulationSize, problem.var_count + 1);
 
-  constexpr size_t best_size = 4;
-  size_t bests[best_size];
+  size_t bests[kBestSize];
   const int* cnf_begin = &problem.cnf.front()[0];
   const int* cnf_end = &problem.cnf.back()[2] + 1;
   uint64_t* child_buffer =
+      (uint64_t*)_mm_malloc((population.num_var + 63) / 64 * 8, 8);
+  uint64_t* child_buffer_b =
       (uint64_t*)_mm_malloc((population.num_var + 63) / 64 * 8, 8);
 
   while (true) {
@@ -62,20 +68,20 @@ int main(int argc, const char* argv[]) {
         best_individual_offset = i;
       }
     }
-    printf("Best %d\n", (int)most_sat);
     PrintBitstring(population.individuals, best_individual_offset,
                    population.num_var);
-    printf("\n");
+    printf("\t%d\n", (int)most_sat);
     if (most_sat == problem.cnf.size()) {
       std::cout << "=== 🐂 ===" << std::endl;
       break;
     }
 
-    TournamentSelect(bests, population, best_size, 64, cnf_begin, cnf_end);
-    size_t parentx = bests[rand() % best_size];
-    size_t parenty = bests[rand() % best_size];
+    TournamentSelect(bests, population, kBestSize, kTournamentSize, cnf_begin,
+                     cnf_end);
+    size_t parentx = bests[rand() % kBestSize];
+    size_t parenty = bests[rand() % kBestSize];
     while (parentx == parenty) {
-      parenty = bests[rand() % best_size];
+      parenty = bests[rand() % kBestSize];
     }
 
     if (crossover_type == CrossOverType::CC) {
@@ -92,18 +98,35 @@ int main(int argc, const char* argv[]) {
       CrossoverUniform(child_buffer, population.individuals,
                        parentx * population.num_var, population.individuals,
                        parenty * population.num_var, population.num_var);
+    } else if (crossover_type == CrossOverType::ONEPOINT) {
+      CrossoverOnePoint(child_buffer, child_buffer_b, population.individuals,
+                        parentx * population.num_var, population.individuals,
+                        parenty * population.num_var, population.num_var);
+    } else if (crossover_type == CrossOverType::TWOPOINT) {
+      CrossoverTwoPoint(child_buffer, child_buffer_b, population.individuals,
+                        parentx * population.num_var, population.individuals,
+                        parenty * population.num_var, population.num_var);
     }
 
-    WalkMutation(child_buffer, 0, 1000, 0.57, cnf_begin, cnf_end);
-    size_t oldest = (population.newest + 1) % population.size;
-    if (CountSat(population.individuals,
-                 bests[best_size - 1] * population.num_var, cnf_begin,
-                 cnf_end) < CountSat(child_buffer, 0, cnf_begin, cnf_end)) {
-      for (size_t i = 0; i < population.num_var; ++i) {
-        bool bit = ReadBit(child_buffer, i);
-        WriteBit(population.individuals, oldest * population.num_var + i, bit);
+    uint64_t* children[2] = {child_buffer, child_buffer_b};
+    size_t num_child = 1;
+    if (crossover_type == CrossOverType::ONEPOINT ||
+        crossover_type == CrossOverType::TWOPOINT)
+      num_child = 2;
+    for (size_t i = 0; i < num_child; ++i) {
+      uint64_t* child = children[i];
+      WalkMutation(child, 0, kMaxFlip, kWalkChance, cnf_begin, cnf_end);
+      size_t oldest = (population.newest + 1) % population.size;
+      if (CountSat(population.individuals,
+                   bests[kBestSize - 1] * population.num_var, cnf_begin,
+                   cnf_end) < CountSat(child, 0, cnf_begin, cnf_end)) {
+        for (size_t j = 0; j < population.num_var; ++j) {
+          bool bit = ReadBit(child, j);
+          WriteBit(population.individuals, oldest * population.num_var + j,
+                   bit);
+        }
+        population.newest = oldest;
       }
-      population.newest = oldest;
     }
   }
 

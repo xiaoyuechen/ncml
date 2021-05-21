@@ -211,7 +211,6 @@ inline void WalkMutation(uint64_t* bitstring, size_t bitstring_offset_bits,
       }
     }
     if (currentSize == 0) {
-      //      std::cout << "🐎" << std::endl;
       return;
     }
     const int* clause = cnf_begin + unsat_arr[rand() % currentSize] * 3;
@@ -384,4 +383,4 @@ inline void CrossoverTwoPoint(uint64_t* out_child1, uint64_t* out_child2,
     WriteBit(out_child2, i, val2);
   }
 }  // namespace gntsat
-}
+}  // namespace gntsat
