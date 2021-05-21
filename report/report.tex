@@ -1,4 +1,4 @@
-\documentclass[oneside,a4paper]{article}
+\documentclass[oneside,twocolumn,a4paper]{article}
 
 % ========== Preamble (packages, definitions etc.) ==========
 
@@ -12,6 +12,7 @@
 \usepackage{listings}
 \usepackage{lmodern}
 \usepackage{color}
+\usepackage{subfiles}
 %\usepackage[backend=bibtex,style=abbrv]{biblatex}
 \newcommand{\todo}[1]{{\color{blue}#1}}  % show to-do items in blue
 \setlength{\parskip}{\baselineskip}
@@ -80,24 +81,25 @@
 }
 
 \begin{document}
-
 \maketitle
 \thispagestyle{empty} % Removes page number for front page
-\pagebreak
-
+\clearpage
 % ========== Document contents ==========
+\abstract{
+abstract
+}
+\newline
+\newline
+{\bf Keywords:} A, B, C
 
-\section {Introduction}
+\subfile{Introduction}
+\subfile{Background}
+\subfile{Methods}
+\subfile {Experiments}
+\subfile {Discussion}
+\subfile {Conclusion}
 
-\section {Background}
 
-\section {Methods}
-
-\section {Experiments \& Results}
-
-\section {Discussion}
-
-\section {Conclusion}
 %\section{Questions}\noindent.
 %
 %\textbf{Question 1.}
