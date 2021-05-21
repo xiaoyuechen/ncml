@@ -16,11 +16,11 @@ enum class CrossOverType {
   _COUNT,
 };
 
-constexpr size_t kPopulationSize = 128;
+constexpr size_t kPopulationSize = 256;
 constexpr size_t kBestSize = 4;
-constexpr size_t kMaxFlip = 200;
+constexpr size_t kMaxFlip = 1000;
 constexpr float kWalkChance = 0.57;
-constexpr size_t kTournamentSize = 8;
+constexpr size_t kTournamentSize = 16;
 
 int main(int argc, const char* argv[]) {
   const auto start = std::chrono::steady_clock::now();
