@@ -382,5 +382,6 @@ inline void CrossoverTwoPoint(uint64_t* out_child1, uint64_t* out_child2,
     bool val2 = ReadBit(parenty, parenty_offset + i);
     WriteBit(out_child2, i, val2);
   }
-}  // namespace gntsat
+}
+
 }  // namespace gntsat
