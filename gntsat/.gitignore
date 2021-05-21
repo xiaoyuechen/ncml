@@ -1,4 +1,5 @@
 build
+build_opt
 .idea
 .cache
 cmake-build-debug
