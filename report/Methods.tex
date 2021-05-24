@@ -1,9 +1,7 @@
 	\section{Methods}
 	\subsection{The algorithm}
-	The population is initialized randomly.  In each iteration, first using tournament to select some best individuals according to fitness.
-	Then crossover are performed on two individuals among the bests. Each
-	generated child is improved individually using local search, and then new individuals are inserted to the population to replace the old
-	individuals under some conditions. Iterate the process until a solution is found.
+	The population is initialized randomly.  In each iteration, first using the tournament to select some best individuals according to fitness.
+	Then crossover is performed on two individuals among the bests. Each generated child is improved individually using local search, and then new individuals are inserted into the population to replace the old individuals under some conditions. Iterate the process until a solution is found.
 	Our SAT Solver is described in detail as Algorithm \ref{alg:sat}.
 	\begin{algorithm}
 	    \SetAlgoLined
@@ -29,13 +27,9 @@
 	  \end{algorithm}
 	
 	\subsubsection{Representation}
-	A candidate solution is a string of bits whose length equals to the number of
-	variables of the considered problem instance. Every variable is associated to
-	one bit. This is the most obvious way to represent a solution candidate. It
-	also makes mutation and crossover operations computationally efficient. The
+	A candidate solution is a string of bits whose length equals the number of variables of the considered problem instance. Every variable is associated with one bit. This is the most obvious way to represent a solution candidate. It also makes mutation and crossover operations computationally efficient. The
 	most successful evolutionary algorithms for SAT also uses representation
-	\parencite{gottlieb_marchiori_rossi_2002}. Hence the bit string representation is a reasonable
-	starting point.
+	\parencite{gottlieb_marchiori_rossi_2002}. Hence the bit string representation is a reasonable starting point.
 	
 	\subsubsection{Fitness function}
 	The fitness value is equivalent to the number of satisfied clauses of the
@@ -47,18 +41,14 @@
 	clause, and $m$ is the number of clauses.
 	
 	\subsubsection{Selection operation}
-	GNTSAT uses a modified version of tournament selection. First, a certain
-	number of individuals are randomly select to participate in the tournament.
-	The participating individuals are ranked according to fitness. The most fit
-	individuals will be selected and stored in a best individuals pool. The two
+	GNTSAT uses a modified version of tournament selection. First, a certain number of individuals are randomly selected to participate in the tournament.
+	The participating individuals are ranked according to fitness. The fittest individuals will be selected and stored in a best individuals pool. The two
 	parents will be selected randomly from this pool.
 	
 	\subsubsection{Crossover operators}
-	The main goal of the crossover operator in GNTSAT is to create potentially
-	promising new individuals. Using the selected parents, there are many ways for
+	The main goal of the crossover operator in GNTSAT is to create potentially promising new individuals. Using the selected parents, there are many ways for
 	them to crossover, and we consider 5 types: CC (Corrective Clause) Crossover,
-	F\&F (Fleurent and Ferland) Crossover, Uniform Crossover, One-point Crossover
-	and Two-point Crossover. We will introduce them respectively below.
+	F\&F (Fleurent and Ferland) Crossover, Uniform Crossover, One-point Crossover and Two-point Crossover. We will introduce them respectively below.
 	\begin{algorithm}
 			\SetAlgoLined
 			\KwData{two parents $X$ and $Y$}

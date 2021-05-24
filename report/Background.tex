@@ -1,7 +1,7 @@
 \section{Background}
 Incomplete methods for SAT can significantly outperform complete methods in
-many domains. Hence there has been tremendous amount of research done on them
-since the early 1990's. SAT problems can be effectively solved by using greedy
+many domains. Hence there has been a tremendous amount of research done on them
+since the early 1990s. SAT problems can be effectively solved by using greedy
 decent if they do not have any local minima, as it could rapidly approach the
 global minima without exhaustively branching or backtracking. However, most
 interesting problems do have local minima. Hence the main challenge and
@@ -9,35 +9,36 @@ opportunity for incomplete SAT methods is escaping local minima
 \parencite{biere2009handbook}.
 
 WalkSAT \parencite{selman1994noise} plays a key role in the success of local search
-for satisfiability \parencite{biere2009handbook}. It improves its ability of escaping
+for satisfiability \parencite{biere2009handbook}. It improves its ability to escape
 local minima by introducing noise into search in the form of uphill moves. It
-always select a variable to flip from a randomly chosen unsatisfied clause
+always selects a variable to flip from a randomly chosen unsatisfied clause
 $C$. If flipping a bit in $C$  does not
 turn any currently satisfied clauses to unsatisfied, WalkSAT flips the bit (a
-``freebie'' move). Otherwise according to a change, it either makes a
+``freebie'' move). Otherwise, according to a change, it either makes a
 ``greedy'' move (a bit flip that will minimize the number of currently
 satisfied clauses becoming unsatisfied) or a ``random walk'' move (flipping a
 random bit in $C$). WalkSAT is proved to significantly
-outperform greedy decent methods on hard satisfiable problems. GNTSAT uses
+outperform greedy descent methods on hard satisfiable problems. GNTSAT uses
 WalkSAT on generated children as its mutation operator.
+
 
 FlipGA \parencite{marchiori1999flipping} is a genetic local search algorithm. FlipGA uses
 a small population size (10 in the original paper). It selects parents with
-probability proportional  to their fitness and generate children with uniform
+probability proportional to their fitness and generates children with uniform
 crossover. Its mutation operator has a 0.9 probability to be used on each
-individual, with a 0.5 probability to flip each gene. FlipGA then perform a
+individual, with a 0.5 probability to flip each gene. FlipGA then performs a
 greedy local search on the children. It scans the genes in random order and
-tries to flip each one of them. If a flip results in an increase of satisfied
+tries to flip each one of them. If a flip result in an increase of satisfied
 clauses, the flip is accepted. This process is repeated if the obtained
 chromosome has more satisfied clauses after all the genes have been
 considered. Benchmark results from \cite{gottlieb_marchiori_rossi_2002} show that FlipGA has
-similar performance to WalkSAT.
+a similar performance to WalkSAT.
 
 GASAT \parencite{lardeux2006gasat} is another genetic local search algorithm. It
-combines many local search methods and is more complex than the previous
+combines many local search methods and is more complex than the previously
 mentioned algorithms. GASAT uses a population scheme where the newly created
 child is accepted only if it is fitter than a subset of the population. The
-child is inserted to the population to replace the oldest individual in the
+child is inserted into the population to replace the oldest individual in the
 population. \citeauthor{lardeux2006gasat} experimented with different crossover
 operators and remarked that Corrective Clause crossover (CC) and Corrective
 Clause and Truth Maintenance crossover (CCTM) have better behaviors than other
@@ -45,7 +46,7 @@ types of crossovers in the sense that they could quickly reduce the number of
 false clauses while maintaining a higher level of population diversity than
 other crossovers. GASAT uses tabu search (TS) to help avoid local minima. It
 also uses TS with diversification to solve the \textit{stumble clause} problem
-i.e., the last false clause is often the same clause and block to tabu search.
+i.e., the last false clause is often the same clause and blocks to tabu search.
 
 \citeauthor{lardeux2006gasat} (\citeyear{lardeux2006gasat}) made a comprehensive comparison between GASAT and other
 algorithms, including WalkSAT and FlipGA. The results show that GASAT has
