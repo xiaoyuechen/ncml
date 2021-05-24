@@ -1,31 +1,32 @@
-\section {Introduction}
-The satisfiability problem (SAT) is a NP-complete problem
-\cite{cook_1971}. SAT problem consists a set of Boolean variables
+\section{Introduction}
+The satisfiability problem (SAT) is an NP-complete problem
+\parencite{cook_1971}. A SAT problem consists of a set of Boolean variables
 $x_1, \cdots, x_n$ and a Boolean formula $f: \mathbb{B}^n \rightarrow \mathbb{B}=\{0, 1\}$. The
 question is whether an assignment $x=(x_1, \cdots, x_n)$ exists such that
-$f(x)=1$ \cite{gottlieb_marchiori_rossi_2002}. A wide range of problems can be
+$f(x)=1$ \parencite{gottlieb_marchiori_rossi_2002}. A wide range of problems can be
 expressed as SAT problems. This includes verification, planning, scheduling
-and combinatorial design \cite{biere2009handbook}. Hence, a SAT solver has been a
+and combinatorial design \parencite{biere2009handbook}. Hence, a SAT solver has been a
 general purpose platform for solving various real-world problems and has
 obvious importance.
 
 There are two types of SAT solver technologies: complete methods and
-incomplete methods. Complete methods can guarantee that it will eventually
-report a satisfying assignment or prove not satisfiable, if it run for long
-enough. Complete methods have an exponential time complexity, unless P = NP.
-On the other hand, incomplete methods has no such guarantee and generally use
-stochastic local search \cite{gomes_kautz_sabharwal_selman_2008}. In many cases where the problem
-does not require a definitive answer, incomplete methods could outperform
-complete methods in terms of both speed and memory usage.
+incomplete methods. Complete methods can guarantee to eventually report a
+satisfying assignment or prove not satisfiable, long enough enough time.
+Complete methods have an exponential time complexity if P
+$\neq$ NP. On the other hand, incomplete methods has no such
+guarantee and generally use stochastic local search \parencite{gomes_kautz_sabharwal_selman_2008}. In
+many cases where the problem does not require a definitive answer, incomplete
+methods could outperform complete methods in terms of both speed and memory
+usage.
 
 Genetic algorithms (GAs) are incomplete methods that have been applied to many
-NP-complete problems, including SAT \cite{gottlieb_marchiori_rossi_2002}. However, results
+NP-complete problems, including SAT \parencite{gottlieb_marchiori_rossi_2002}. However, results
 suggest that classical GAs may not outperform local search algorithms
-\cite{de1989using}. Nevertheless, recent results show that GAs can yield
-good results if combined with other methods \cite{gottlieb_marchiori_rossi_2002}.
+\parencite{de1989using}. Nevertheless, recent results show that GAs can yield
+good results if combined with other methods \parencite{gottlieb_marchiori_rossi_2002}.
 
-This paper proposes a genetic algorithm---GNTSAT, which is based on WalkSat
-\cite{selman1994noise} and outperforms WalkSat in many benchmark instances.
+This paper proposes a genetic algorithm: GNTSAT, which is based on WalkSAT
+\parencite{selman1994noise} and outperforms WalkSAT in many benchmark instances.
 This paper introduces the GNTSAT algorithm, makes performance evaluations
-based on benchmarks, and discuss the possible reasons for the performance
+based on benchmarks, and discusses the possible reasons for the performance
 difference and their implications.
