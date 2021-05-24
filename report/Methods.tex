@@ -63,6 +63,7 @@ and Two-point Crossover. We will introduce them respectively below.
 		\label{alg:cc} 
 		\KwData{two parents $X$ and $Y$}
 		\KwResult{one child $Z$}
+		\BlankLine
 			all the bits of child $Z$ take the values of parent $X$ or parent $Y$ with the equal probability\;
 		\For{each clauses c such that $ \neg sat(X,c) \wedge \neg sat(Y,c)$}{
 			\For{all positions $i$ such that the variable $x_{i}$ appears in c}{
@@ -84,8 +85,10 @@ and Two-point Crossover. We will introduce them respectively below.
 		  \begin{algorithm}
 			\SetAlgoLined
 			\label{alg:ff} 
+			\caption{Fleurent and Ferland Crossover}
 			\KwData{two parents $X$ and $Y$}
 			\KwResult{one child $Z$}
+			\BlankLine
 			  all the bits of child $Z$ take the values of parent $X$ or parent $Y$ with the equal probability\;
 			\For{each clauses c such that $ sat(X,c) \wedge \neg sat(Y,c)$ (resp. $\neg sat(X,c) \wedge sat(Y,c))$}{
 			  \For{all positions i such that the variable $x_{i}$ appears in c}{
@@ -94,7 +97,6 @@ and Two-point Crossover. We will introduce them respectively below.
 			  Set $Z\vert k = flip(X\vert k)$ where $k$ is the position such that $\sigma$ is maximum\;
 			  }
 			}
-			\caption{Fleurent and Ferland Crossover}
 		  \end{algorithm}
 	\item
 	      Uniform Crossover: With equal probability, each bits of the child is chosen
@@ -102,12 +104,13 @@ and Two-point Crossover. We will introduce them respectively below.
 		  \begin{algorithm}
 			\SetAlgoLined
 			\label{alg:uniform} 
+			\caption{Uniform Crossover}
 			\KwData{two parents $X$ and $Y$}
 			\KwResult{one child $Z$}
+			\BlankLine
 			\For{each bit $x$}{
 			  $Z\vert x = X\vert x$ or $Z\vert x = Y\vert x$ with equal possibility\;
 			}
-			\caption{Uniform Crossover}
 		  \end{algorithm}
 	\item
 	      One-point Crossover: Randomly select one pivot point (ranging between 0 to
@@ -117,8 +120,10 @@ and Two-point Crossover. We will introduce them respectively below.
 		  \begin{algorithm}
 			\SetAlgoLined
 			\label{alg:onepoint} 
+			\caption{One-point Crossover}
 			\KwData{two parents $X$ and $Y$ }
 			\KwResult{two children $Z_1$ and $Z_2$}
+			\BlankLine
 			\For{each bit $x$ where its position is less than the pivot point}{
 			  $Z_1\vert x = X\vert x$\;
 			  $Z_2\vert x = Y\vert x$\;
@@ -127,7 +132,6 @@ and Two-point Crossover. We will introduce them respectively below.
 			  $Z_1\vert x = Y\vert x$\;
 			  $Z_2\vert x = Y\vert x$\;
 			}
-			\caption{One-point Crossover}
 		  \end{algorithm}
 	\item
 	      Two-point Crossover: Randomly pick two pivot points and the bits in between
@@ -136,8 +140,10 @@ and Two-point Crossover. We will introduce them respectively below.
 		  \begin{algorithm}
 			\SetAlgoLined
 			\label{alg:twopoint} 
+			\caption{Two-point Crossover}
 			\KwData{two parents $X$ and $Y$ }
 			\KwResult{two children $Z_1$ and $Z_2$}
+			\BlankLine
 			\For{each bit $x$ where its position is in between the two pivot points}{
 			  $Z_1\vert x = X\vert x$\;
 			  $Z_2\vert x = Y\vert x$\;
@@ -146,24 +152,25 @@ and Two-point Crossover. We will introduce them respectively below.
 			  $Z_1\vert x = Y\vert x$\;
 			  $Z_2\vert x = Y\vert x$\;
 			}
-			\caption{Two-point Crossover}
 		  \end{algorithm}
 \end{itemize}
 
 \subsubsection{Local search}
-We implement the idea of mutation in genetic algorithm using WalkSat local search method. It's a randomized local search algorithm. WalkSat is illustrated in detail as Algorithm \ref{alg:walksat}. It attempts to determine the best move by randomly choosing a clause among those that are currently unsatisfied and selecting a variable to flip within it under some conditions. The evaluation function in deciding bits to flip here is called break-count. It equals to the number of satisfied clauses which become unsatisfied by flipping a bit. The maximum number of flips (MAX-Flips) is set to 1000 and the probability of a random move $p$ is set to 0.57 since it's the optimal noise value \cite{SAO05}. The search stops when one solution is found.
+We implement the idea of mutation in genetic algorithm using WalkSat local search method. It's a randomized local search algorithm. WalkSat is illustrated in detail as Algorithm \ref{alg:walksat}. It attempts to determine the best move by randomly choosing a clause among those that are currently unsatisfied and selecting a variable to flip within it under some conditions. The evaluation function in deciding bits to flip here is called break-count. It equals to the number of satisfied clauses which become unsatisfied by flipping a bit. The maximum number of flips (MAX-Flips) is set to 1000 and the probability of a random move $p$ is set to 0.57 since it's the optimal noise value \parencite{SAO05}. The search stops when one solution is found.
 \begin{algorithm}
   \label{alg:walksat} 
   \SetAlgoLined
+  \caption{WalkSat Local Search}
   \KwData{one child $Z$ generated from the crossover above }
   \KwResult{a solution for the instance}
+  \BlankLine
     all the bits of child Z take the values of parent X or parent Y with the equal probability\;
   \For{ $i \leftarrow 1$ to MAX-Flips}{
     \If{$Z$ is a solution}{
       return $Z$\;
     }
     {Clause C is randomly selected among unsatisfied clauses\;}  
-    \eIf{$\exists$ variable $c \in C$ with $\operatorname{beak-count} = 0$}{
+    \eIf{$\exists$ variable $c \in C$ with $\operatorname{beak-count}=0$}{
       $v\leftarrow c$\;
       }{
       with probability p:
@@ -173,9 +180,7 @@ We implement the idea of mutation in genetic algorithm using WalkSat local searc
       }
       {Flip $v$ in Z\;}
   }
-  \caption{WalkSat Local Search}
 \end{algorithm}
-
 \subsection{Implementation}
 GNTSAT is implemented in C++. GNTSAT takes a DIMACS CNF file as input and
 output the resulting bit string if found. User could adjust parameters such as
