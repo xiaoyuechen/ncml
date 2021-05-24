@@ -20,8 +20,8 @@
 \usepackage[absolute]{textpos}
 \usepackage{fancyhdr}
 \usepackage[figuresright]{rotating}
-\usepackage{biblatex}
-%\usepackage[backend=bibtex,style=abbrv]{biblatex}
+\usepackage[style=apa]{biblatex}
+\addbibresource{bibliography.bib}
 \newcommand{\todo}[1]{{\color{blue}#1}}  % show to-do items in blue
 \setlength{\parskip}{\baselineskip}
 \usepackage[activate={true,nocompatibility},
@@ -117,36 +117,5 @@ abstract
 \subfile {Experiments}
 \subfile {Discussion}
 \subfile {Conclusion}
-
-
-%\section{Questions}\noindent.
-%
-%\textbf{Question 1.}
-%
-%Write your answers here. You can cite like this.\cite{Smith:2012qr} The cite
-%reference is in the file \texttt{bibliography.bib}. 
-%
-%\textbf{Question 2.}
-%
-%\textbf{Question 3.} 
-%
-%\textbf{Plot 1}
-%\begin{figure}[h]
-%    \begin{center}
-%        \includegraphics[width=0.8\textwidth]{placeholder} % Include the image placeholder.png
-%        \caption{Figure caption.}
-%        \label{fig:my_figure}
-%    \end{center}
-%\end{figure}
-
-% Delete this section if you have no plot to submit.
-% Change the size of the figure by changing the value in [width=300pt]
-
-% Putting \autoref{fig:my_figure} in your text will refer to the corresponding figure label.
-% Eg.: "\autoref{fig:my_figure} clearly shows that the large circle is larger than the small box."
-% Read more about autoref here https://en.wikibooks.org/wiki/LaTeX/Labels_and_Cross-referencing#autoref
-
-%\bibliographystyle{apalike}
-\printbibliography
 
 \end{document}
