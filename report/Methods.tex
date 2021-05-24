@@ -157,7 +157,7 @@ and Two-point Crossover. We will introduce them respectively below.
 
 \subsubsection{Local search}
 We implement the idea of mutation in genetic algorithm using WalkSat local search method. It's a randomized local search algorithm. WalkSat is illustrated in detail as Algorithm \ref{alg:walksat}. It attempts to determine the best move by randomly choosing a clause among those that are currently unsatisfied and selecting a variable to flip within it under some conditions. The evaluation function in deciding bits to flip here is called break-count. It equals to the number of satisfied clauses which become unsatisfied by flipping a bit. The maximum number of flips (MAX-Flips) is set to 1000 and the probability of a random move $p$ is set to 0.57 since it's the optimal noise value \parencite{SAO05}. The search stops when one solution is found.
-\begin{algorithm}
+\begin{algorithm*}
   \label{alg:walksat} 
   \SetAlgoLined
   \caption{WalkSat Local Search}
@@ -180,7 +180,7 @@ We implement the idea of mutation in genetic algorithm using WalkSat local searc
       }
       {Flip $v$ in Z\;}
   }
-\end{algorithm}
+\end{algorithm*}
 \subsection{Implementation}
 GNTSAT is implemented in C++. GNTSAT takes a DIMACS CNF file as input and
 output the resulting bit string if found. User could adjust parameters such as
