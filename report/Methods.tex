@@ -1,8 +1,10 @@
 	\section{Methods}
 	\subsection{The algorithm}
-	The population is initialized randomly.  In each iteration, first using the tournament to select some best individuals according to fitness.
-	Then crossover is performed on two individuals among the bests. Each generated child is improved individually using local search, and then new individuals are inserted into the population to replace the old individuals under some conditions. Iterate the process until a solution is found.
-	Our SAT Solver is described in detail as Algorithm \ref{alg:sat}.
+	The population is initialized randomly.  In each iteration, first using tournament to select some best individuals according to fitness.
+	Then crossover are performed on two individuals among the bests. Each
+	generated child is improved individually using local search, and then new individuals are inserted to the population to replace the old
+	individuals under some conditions. Iterate the process until a solution is found.
+	Our GNTSAT Solver is described in detail as Algorithm \ref{alg:sat}.
 	\begin{algorithm}
 	    \SetAlgoLined
 	    \caption{SAT Solver Algorithm}
@@ -27,9 +29,13 @@
 	  \end{algorithm}
 	
 	\subsubsection{Representation}
-	A candidate solution is a string of bits whose length equals the number of variables of the considered problem instance. Every variable is associated with one bit. This is the most obvious way to represent a solution candidate. It also makes mutation and crossover operations computationally efficient. The
+	A candidate solution is a string of bits whose length equals to the number of
+	variables of the considered problem instance. Every variable is associated to
+	one bit. This is the most obvious way to represent a solution candidate. It
+	also makes mutation and crossover operations computationally efficient. The
 	most successful evolutionary algorithms for SAT also uses representation
-	\parencite{gottlieb_marchiori_rossi_2002}. Hence the bit string representation is a reasonable starting point.
+	\parencite{gottlieb_marchiori_rossi_2002}. Hence the bit string representation is a reasonable
+	starting point.
 	
 	\subsubsection{Fitness function}
 	The fitness value is equivalent to the number of satisfied clauses of the
@@ -38,17 +44,21 @@
 		\mathit{fitness}(x) = \sum_{i=1}^m c_i(x)
 	\end{equation*}
 	where $c_i(x)$ is the truth value of the $i$th
-	clause, and $m$ is the number of clauses.
+	clause of individual $x$, and $m$ is the number of clauses.
 	
 	\subsubsection{Selection operation}
-	GNTSAT uses a modified version of tournament selection. First, a certain number of individuals are randomly selected to participate in the tournament.
-	The participating individuals are ranked according to fitness. The fittest individuals will be selected and stored in a best individuals pool. The two
+	GNTSAT uses a modified version of tournament selection. First, a certain
+	number of individuals are randomly select to participate in the tournament.
+	The participating individuals are ranked according to fitness. The most fit
+	individuals will be selected and stored in a best individuals pool. The two
 	parents will be selected randomly from this pool.
 	
 	\subsubsection{Crossover operators}
-	The main goal of the crossover operator in GNTSAT is to create potentially promising new individuals. Using the selected parents, there are many ways for
+	The main goal of the crossover operator in GNTSAT is to create potentially
+	promising new individuals. Using the selected parents, there are many ways for
 	them to crossover, and we consider 5 types: CC (Corrective Clause) Crossover,
-	F\&F (Fleurent and Ferland) Crossover, Uniform Crossover, One-point Crossover and Two-point Crossover. We will introduce them respectively below.
+	F\&F (Fleurent and Ferland) Crossover, Uniform Crossover, One-point Crossover
+	and Two-point Crossover. We will introduce them respectively below.
 	\begin{algorithm}
 			\SetAlgoLined
 			\KwData{two parents $X$ and $Y$}
@@ -62,7 +72,7 @@
 				Set $Z\vert k = flip(X\vert k)$ where $k$ is the position such that $\sigma$ is maximum\;
 				}
 			}
-			\caption{Corrective Clause Algorithm}
+			\caption{Corrective Clause Crossover}
 			\label{alg:cc} 
 			\end{algorithm}
 			\begin{algorithm}
@@ -120,7 +130,7 @@
 		      satisfied clauses which become false. Assign the flipped value applied to one
 		      of the parents to the child in the bit position found, and all the bits with
 		      no value of child take the value in corresponding position of parent X or
-		      parent Y with the equal probability. CC crossover is illustrated in detail as Algorithm \ref{alg:cc}.
+		      parent Y with the equal probability. CC crossover is illustrated in detail as Algorithm \ref{alg:cc} \parencite{lardeux2006gasat}.
 			
 		\item
 		      F\&F (Fleurent and Ferland) Crossover: For each clause c that is satisfiable
@@ -129,7 +139,7 @@
 		      the literally absolute value $i$ of the variable in parents,
 		      are assigned values according to the parent satisfying the identified clause.
 		      All the bits with no value of the child take the value in corresponding
-		      position of parent X or parent Y with the equal probability. F\&F crossover is illustrated in detail as Algorithm \ref{alg:ff}.
+		      position of parent X or parent Y with the equal probability. F\&F crossover is illustrated in detail as Algorithm \ref{alg:ff} \parencite{lardeux2006gasat}.
 			  
 		\item
 		      Uniform Crossover: With equal probability, each bits of the child is chosen
@@ -163,7 +173,8 @@
 			  \end{algorithm}
 	
 	\subsubsection{Local search}
-	We implement the idea of mutation in genetic algorithm using WalkSat local search method. It's a randomized local search algorithm. WalkSat is illustrated in detail as Algorithm \ref{alg:walksat}. It attempts to determine the best move by randomly choosing a clause among those that are currently unsatisfied and selecting a variable to flip within it under some conditions. The evaluation function in deciding bits to flip here is called break-count. It equals to the number of satisfied clauses which become unsatisfied by flipping a bit. The maximum number of flips (MAX-Flips) is set to 1000 and the probability of a random move $p$ is set to 0.57 since it's the optimal noise value \parencite{SAO05}. The search stops when one solution is found.
+	We implement the idea of mutation in genetic algorithm using WalkSat local search method.
+	It's a randomized local search algorithm and illustrated in detail as Algorithm \ref{alg:walksat} \parencite{biere2009handbook}. It attempts to determine the best move by randomly choosing a clause among those that are currently unsatisfied and selecting a variable to flip within it under some conditions. The evaluation function in deciding bits to flip here is called break-count. It equals to the number of satisfied clauses which become unsatisfied by flipping a bit. The maximum number of flips (MAX-Flips) is set to 1000 and the probability of a random move $p$ is set to 0.57 since it's the optimal noise value \parencite{SAO05}. The search stops when one solution is found.
 	
 	\begin{algorithm*}
 	  \SetAlgoLined
@@ -197,9 +208,9 @@
 	\subsection{Performance measures}
 	After all these processes to generate a solution, we compare our solver using
 	different crossovers and with other existing solvers. Several runs are
-	required for each benchmark instance under consideration and some measuring
-	methods need to be taken for statistically meaningful and also relatively fair
-	results. We take 10 runs and consider three measuring methods: SR (Success
+	required for each benchmark instance under consideration, and some measuring
+	methods need to be taken for statistically meaningful and relatively fair
+	results. We consider three measuring methods: SR (Success
 	rate), AT (Average Time) and AFS (Average Flips to Solution). We will
 	introduce them respectively below.
 	
@@ -208,8 +219,7 @@
 		      SR (Success rate): SR represents the percentage of runs where a solution has
 		      been found within a time limit. Since some runs where the time to get a
 		      solution is too long or the solver is stuck in the local optimal solution, we
-		      use SR to measure the quality of the solver. And the maximum time we set for a
-		      successful run is 120 seconds.
+		      set a maximum time for a successful run and use SR to measure the quality of the solver. 
 		\item
 		      AT (Average Time): AT represents the average seconds taken in successful runs.
 		\item
