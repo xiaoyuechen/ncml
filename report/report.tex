@@ -4,6 +4,7 @@
 
 \usepackage[utf8]{inputenc}
 \usepackage[english]{babel}
+\usepackage{pdflscape}
 \usepackage{graphicx}
 \usepackage{xcolor}
 \usepackage{amsmath, amsthm, amssymb}
@@ -13,6 +14,12 @@
 \usepackage{lmodern}
 \usepackage{color}
 \usepackage{subfiles}
+\usepackage{multirow} 
+\usepackage{multicol} 
+\usepackage{arydshln}
+\usepackage[absolute]{textpos}
+\usepackage{fancyhdr}
+\usepackage[figuresright]{rotating}
 %\usepackage[backend=bibtex,style=abbrv]{biblatex}
 \newcommand{\todo}[1]{{\color{blue}#1}}  % show to-do items in blue
 \setlength{\parskip}{\baselineskip}
@@ -25,7 +32,7 @@
             stretch=10,
             shrink=10]{microtype}
 \hypersetup{
-    pdftitle={Project Report: Genetic Algorithm on SAT Problem},
+    pdftitle={Genetic Algorithm on SAT Problem},
     bookmarks=true,
     pdfpagemode=FullScreen,
 }
@@ -65,12 +72,23 @@
 	showstringspaces=false
 }
 
+\fancypagestyle{lscape}{% 
+\fancyhf{} % clear all header and footer fields 
+\fancyfoot[LE]{%
+\begin{textblock}{20}(1,5){\rotatebox{90}{\leftmark}}\end{textblock}
+\begin{textblock}{1}(13,10.5){\rotatebox{90}{\thepage}}\end{textblock}}
+\fancyfoot[LO] {%
+\begin{textblock}{1}(13,10.5){\rotatebox{90}{\thepage}}\end{textblock}
+\begin{textblock}{20}(1,13.25){\rotatebox{90}{\rightmark}}\end{textblock}}
+\renewcommand{\headrulewidth}{0pt} 
+\renewcommand{\footrulewidth}{0pt}}
+
 % ========== Title page ==========
 
 \title{
 	\includegraphics[width=0.6\textwidth]{UU_logo.pdf}\\[1em]
 	Report for Natural Computation Methods for Machine Learning\\[1em]
-	Project Report: Genetic Algorithm on SAT Problem\\[3em]
+	Genetic Algorithm on SAT Problem\\[3em]
 	Group 06
 }
 
