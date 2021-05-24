@@ -74,6 +74,7 @@ inline void IsCnfSat(uint64_t* out_result, const uint64_t* bitstring_begin,
     const int* clause = cnf_begin + 3 * i;
     bool sat = IsClauseSat(bitstring_begin, bitstring_offset_bits, clause);
     WriteBit(out_result, i, sat);
+    --g_num_flips;
   }
 }
 

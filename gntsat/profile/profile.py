@@ -2,6 +2,7 @@ import subprocess
 import re
 import json
 
+
 def time_flip(output):
     global data_regx
     fs_begin = output.rfind('FS', 0, len(output))
@@ -14,7 +15,7 @@ def time_flip(output):
 gnt_sat_path = "../cmake-build-debug/gntsat"
 walksat_path = "../cmake-build-debug/walksat"
 
-crossover_types = ["cc", "ff", "uniform"]
+crossover_types = ["cc", "ff", "uniform", "onepoint", "twopoint"]
 benchmark_paths = [
     "../benchmark/uf-250-1065/uf250-01.cnf",
     # "../benchmark/uf-250-1065/uf250-02.cnf",
@@ -23,7 +24,7 @@ benchmark_paths = [
 
 data_regx = re.compile(".*: (\d+)")
 k_times = 10
-timeout = 5*60
+timeout = 5 * 60
 gnt_results = {}
 walksat_results = {}
 for benchmark in benchmark_paths:
@@ -32,7 +33,6 @@ for benchmark in benchmark_paths:
         gnt_results[benchmark][crossover] = []
     walksat_results[benchmark] = []
 
-
 for benchmark in benchmark_paths:
     for crossover in crossover_types:
         for _ in range(k_times):
@@ -40,7 +40,8 @@ for benchmark in benchmark_paths:
                 result = subprocess.run(
                     [gnt_sat_path, "--crossover=" + crossover, benchmark],
                     capture_output=True,
-                    text=True, timeout=timeout)
+                    text=True,
+                    timeout=timeout)
                 output = result.stdout
                 gnt_results[benchmark][crossover].append(time_flip(output))
             except subprocess.TimeoutExpired:
@@ -50,10 +51,10 @@ for benchmark in benchmark_paths:
 
     for _ in range(k_times):
         try:
-            result = subprocess.run(
-                [walksat_path, benchmark],
-                capture_output=True,
-                text=True, timeout=timeout)
+            result = subprocess.run([walksat_path, benchmark],
+                                    capture_output=True,
+                                    text=True,
+                                    timeout=timeout)
             output = result.stdout
             walksat_results[benchmark].append(time_flip(output))
 
