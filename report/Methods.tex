@@ -1,231 +1,233 @@
-\section{Methods}
-\subsection{The algorithm}
-The population is initialized randomly.  In each iteration, first using tournament to select some best individuals according to fitness.
-Then crossover are performed on two individuals among the bests. Each
-generated child is improved individually using local search, and then new individuals are inserted to the population to replace the old
-individuals under some conditions. Iterate the process until a solution is found.
-Our SAT Solver is described in detail as Algorithm \ref{alg:sat}.
-\begin{algorithm}
-    \SetAlgoLined
-    \caption{SAT Solver Algorithm}
-    \label{alg:sat} 
-    \KwData{population}
-    \KwResult{a solution for the instance}
-    \BlankLine
-    \While{true}{
-      \If{a solution is found}{
-            return the solution\;
-        }   
-      select some best individuals\;
-      randomly choose two individuals among the bests for crossover\;
-    \For{each each generated child}{
-      local search\;
-      \If{fitness (improved child) > fitness (the oldest individual)}{
-        insert the new child\;
-        remove the oldest individual\;
-    }
-    }
-    }
-  \end{algorithm}
-
-\subsubsection{Representation}
-A candidate solution is a string of bits whose length equals to the number of
-variables of the considered problem instance. Every variable is associated to
-one bit. This is the most obvious way to represent a solution candidate. It
-also makes mutation and crossover operations computationally efficient. The
-most successful evolutionary algorithms for SAT also uses representation
-\parencite{gottlieb_marchiori_rossi_2002}. Hence the bit string representation is a reasonable
-starting point.
-
-\subsubsection{Fitness function}
-The fitness value is equivalent to the number of satisfied clauses of the
-individual.
-\begin{equation*}
-	\mathit{fitness}(x) = \sum_{i=1}^m c_i(x)
-\end{equation*}
-where $c_i(x)$ is the truth value of the $i$th
-clause, and $m$ is the number of clauses.
-
-\subsubsection{Selection operation}
-GNTSAT uses a modified version of tournament selection. First, a certain
-number of individuals are randomly select to participate in the tournament.
-The participating individuals are ranked according to fitness. The most fit
-individuals will be selected and stored in a best individuals pool. The two
-parents will be selected randomly from this pool.
-
-\subsubsection{Crossover operators}
-The main goal of the crossover operator in GNTSAT is to create potentially
-promising new individuals. Using the selected parents, there are many ways for
-them to crossover, and we consider 5 types: CC (Corrective Clause) Crossover,
-F\&F (Fleurent and Ferland) Crossover, Uniform Crossover, One-point Crossover
-and Two-point Crossover. We will introduce them respectively below.
-
-\begin{itemize}
-	\item
-	      CC (Corrective Clause) Crossover: For each clause c that is unsatisfiable for
-	      both parent X and parent Y solutions and for each variables that appears in
-	      clause c, find the bit position using the literally absolute value
-	      $i$ of the variable that produces the maximum improvement on
-	      two parents guided by the improvement evaluation function. The function equals
-	      to the number of false clauses which become true by flipping the
-	      $ith$ bit in one of the solutions minus the number of
-	      satisfied clauses which become false. Assign the flipped value applied to one
-	      of the parents to the child in the bit position found, and all the bits with
-	      no value of child take the value in corresponding position of parent X or
-	      parent Y with the equal probability. CC crossover is illustrated in detail as Algorithm \ref{alg:cc}.
-		\begin{algorithm}
-		\SetAlgoLined
-		\KwData{two parents $X$ and $Y$}
-		\KwResult{one child $Z$}
-		\BlankLine
-			all the bits of child $Z$ take the values of parent $X$ or parent $Y$ with the equal probability\;
-		\For{each clauses c such that $ \neg sat(X,c) \wedge \neg sat(Y,c)$}{
-			\For{all positions $i$ such that the variable $x_{i}$ appears in c}{
-			Compute $ \sigma = improvement(X, i) + improvement(Y, i)$ \;
-			}{
-			Set $Z\vert k = flip(X\vert k)$ where $k$ is the position such that $\sigma$ is maximum\;
-			}
-		}
-		\caption{Corrective Clause Algorithm}
-		\label{alg:cc} 
-		\end{algorithm}
-	\item
-	      F\&F (Fleurent and Ferland) Crossover: For each clause c that is satisfiable
-	      for one parent and unsatisfiable for the other parent and for each variables
-	      that appears in clause c, the bits positions in the child, corresponding to
-	      the literally absolute value $i$ of the variable in parents,
-	      are assigned values according to the parent satisfying the identified clause.
-	      All the bits with no value of the child take the value in corresponding
-	      position of parent X or parent Y with the equal probability. F\&F crossover is illustrated in detail as Algorithm \ref{alg:ff}.
-		  \begin{algorithm}
+	\section{Methods}
+	\subsection{The algorithm}
+	The population is initialized randomly.  In each iteration, first using tournament to select some best individuals according to fitness.
+	Then crossover are performed on two individuals among the bests. Each
+	generated child is improved individually using local search, and then new individuals are inserted to the population to replace the old
+	individuals under some conditions. Iterate the process until a solution is found.
+	Our SAT Solver is described in detail as Algorithm \ref{alg:sat}.
+	\begin{algorithm}
+	    \SetAlgoLined
+	    \caption{SAT Solver Algorithm}
+	    \label{alg:sat} 
+	    \KwData{population}
+	    \KwResult{a solution for the instance}
+	    \BlankLine
+	    \While{true}{
+	      \If{a solution is found}{
+	            return the solution\;
+	        }   
+	      select some best individuals\;
+	      randomly choose two individuals among the bests for crossover\;
+	    \For{each each generated child}{
+	      local search\;
+	      \If{fitness (improved child) > fitness (the oldest individual)}{
+	        insert the new child\;
+	        remove the oldest individual\;
+	    }
+	    }
+	    }
+	  \end{algorithm}
+	
+	\subsubsection{Representation}
+	A candidate solution is a string of bits whose length equals to the number of
+	variables of the considered problem instance. Every variable is associated to
+	one bit. This is the most obvious way to represent a solution candidate. It
+	also makes mutation and crossover operations computationally efficient. The
+	most successful evolutionary algorithms for SAT also uses representation
+	\parencite{gottlieb_marchiori_rossi_2002}. Hence the bit string representation is a reasonable
+	starting point.
+	
+	\subsubsection{Fitness function}
+	The fitness value is equivalent to the number of satisfied clauses of the
+	individual.
+	\begin{equation*}
+		\mathit{fitness}(x) = \sum_{i=1}^m c_i(x)
+	\end{equation*}
+	where $c_i(x)$ is the truth value of the $i$th
+	clause, and $m$ is the number of clauses.
+	
+	\subsubsection{Selection operation}
+	GNTSAT uses a modified version of tournament selection. First, a certain
+	number of individuals are randomly select to participate in the tournament.
+	The participating individuals are ranked according to fitness. The most fit
+	individuals will be selected and stored in a best individuals pool. The two
+	parents will be selected randomly from this pool.
+	
+	\subsubsection{Crossover operators}
+	The main goal of the crossover operator in GNTSAT is to create potentially
+	promising new individuals. Using the selected parents, there are many ways for
+	them to crossover, and we consider 5 types: CC (Corrective Clause) Crossover,
+	F\&F (Fleurent and Ferland) Crossover, Uniform Crossover, One-point Crossover
+	and Two-point Crossover. We will introduce them respectively below.
+	\begin{algorithm}
 			\SetAlgoLined
-			\caption{Fleurent and Ferland Crossover}
-			\label{alg:ff} 
 			\KwData{two parents $X$ and $Y$}
 			\KwResult{one child $Z$}
 			\BlankLine
-			  all the bits of child $Z$ take the values of parent $X$ or parent $Y$ with the equal probability\;
-			\For{each clauses c such that $ sat(X,c) \wedge \neg sat(Y,c)$ (resp. $\neg sat(X,c) \wedge sat(Y,c))$}{
-			  \For{all positions i such that the variable $x_{i}$ appears in c}{
-				$Z\vert i = X \vert i$ (resp. $Z\vert i = Y \vert i$)\;
-			  }{
-			  Set $Z\vert k = flip(X\vert k)$ where $k$ is the position such that $\sigma$ is maximum\;
-			  }
+				all the bits of child $Z$ take the values of parent $X$ or parent $Y$ with the equal probability\;
+			\For{each clauses c such that $ \neg sat(X,c) \wedge \neg sat(Y,c)$}{
+				\For{all positions $i$ such that the variable $x_{i}$ appears in c}{
+				Compute $ \sigma = improvement(X, i) + improvement(Y, i)$ \;
+				}{
+				Set $Z\vert k = flip(X\vert k)$ where $k$ is the position such that $\sigma$ is maximum\;
+				}
 			}
-		  \end{algorithm}
-	\item
-	      Uniform Crossover: With equal probability, each bits of the child is chosen
-	      from either parent. In that case, one new offspring is generated. Uniform Crossover is illustrated in detail as Algorithm \ref{alg:uniform}.
-		  \begin{algorithm}
-			\SetAlgoLined
-			\caption{Uniform Crossover}
-			\label{alg:uniform} 
-			\KwData{two parents $X$ and $Y$}
-			\KwResult{one child $Z$}
-			\BlankLine
-			\For{each bit $x$}{
-			  $Z\vert x = X\vert x$ or $Z\vert x = Y\vert x$ with equal possibility\;
-			}
-		  \end{algorithm}
-	\item
-	      One-point Crossover: Randomly select one pivot point (ranging between 0 to
-	      length of the bits string) and exchange the substring from that bit point till
-	      the end of the string between the two individuals. In that case, two new
-	      offspring individual are generated. One-point Crossover is illustrated in detail as Algorithm \ref{alg:onepoint}.
-		  \begin{algorithm}
-			\SetAlgoLined
-			\caption{One-point Crossover}
-			\label{alg:onepoint} 
-			\KwData{two parents $X$ and $Y$ }
-			\KwResult{two children $Z_1$ and $Z_2$}
-			\BlankLine
-			\For{each bit $x$ where its position is less than the pivot point}{
-			  $Z_1\vert x = X\vert x$\;
-			  $Z_2\vert x = Y\vert x$\;
-			}
-			\For{each bit x where its position is larger than the pivot point}{
-			  $Z_1\vert x = Y\vert x$\;
-			  $Z_2\vert x = Y\vert x$\;
-			}
-		  \end{algorithm}
-	\item
-	      Two-point Crossover: Randomly pick two pivot points and the bits in between
-	      the two points are swapped between the parent individuals. In that case, two
-	      new offspring individual are generated. Two-point Crossover is illustrated in detail as Algorithm \ref{alg:twopoint}.
-		  \begin{algorithm}
-			\SetAlgoLined
-			\caption{Two-point Crossover}
-			\label{alg:twopoint} 
-			\KwData{two parents $X$ and $Y$ }
-			\KwResult{two children $Z_1$ and $Z_2$}
-			\BlankLine
-			\For{each bit $x$ where its position is in between the two pivot points}{
-			  $Z_1\vert x = X\vert x$\;
-			  $Z_2\vert x = Y\vert x$\;
-			}
-			\For{each bit $x$ where the position is not in between the two pivot points}{
-			  $Z_1\vert x = Y\vert x$\;
-			  $Z_2\vert x = Y\vert x$\;
-			}
-		  \end{algorithm}
-\end{itemize}
-
-\subsubsection{Local search}
-We implement the idea of mutation in genetic algorithm using WalkSat local search method. It's a randomized local search algorithm. WalkSat is illustrated in detail as Algorithm \ref{alg:walksat}. It attempts to determine the best move by randomly choosing a clause among those that are currently unsatisfied and selecting a variable to flip within it under some conditions. The evaluation function in deciding bits to flip here is called break-count. It equals to the number of satisfied clauses which become unsatisfied by flipping a bit. The maximum number of flips (MAX-Flips) is set to 1000 and the probability of a random move $p$ is set to 0.57 since it's the optimal noise value \parencite{SAO05}. The search stops when one solution is found.
-
-\begin{algorithm*}
-  \SetAlgoLined
-  \caption{WalkSat Local Search}
-  \label{alg:walksat} 
-  \KwData{one child $Z$ generated from the crossover above }
-  \KwResult{a solution for the instance}
-  \BlankLine
-    all the bits of child Z take the values of parent X or parent Y with the equal probability\;
-  \For{ $i \leftarrow 1$ to MAX-Flips}{
-    \If{$Z$ is a solution}{
-      return $Z$\;
-    }
-    {Clause C is randomly selected among unsatisfied clauses\;}  
-    \eIf{$\exists$ variable $c \in C$ with $\operatorname{beak-count}=0$}{
-      $v\leftarrow c$\;
-      }{
-      with probability p:
-      $v\leftarrow$ a variable x in C chosen randomly\;
-      with probability 1-p:
-      $v\leftarrow$ a variable x in C with smallest $\operatorname{beak-count}$ \;
-      }
-      {Flip $v$ in Z\;}
-  }
-\end{algorithm*}
-\subsection{Implementation}
-GNTSAT is implemented in C++. GNTSAT takes a DIMACS CNF file as input and
-output the resulting bit string if found. User could adjust parameters such as
-population size, tournament size, and crossover operator.
-
-\subsection{Performance measures}
-After all these processes to generate a solution, we compare our solver using
-different crossovers and with other existing solvers. Several runs are
-required for each benchmark instance under consideration and some measuring
-methods need to be taken for statistically meaningful and also relatively fair
-results. We take 10 runs and consider three measuring methods: SR (Success
-rate), AT (Average Time) and AFS (Average Flips to Solution). We will
-introduce them respectively below.
-
-\begin{itemize}
-	\item
-	      SR (Success rate): SR represents the percentage of runs where a solution has
-	      been found within a time limit. Since some runs where the time to get a
-	      solution is too long or the solver is stuck in the local optimal solution, we
-	      use SR to measure the quality of the solver. And the maximum time we set for a
-	      successful run is 120 seconds.
-	\item
-	      AT (Average Time): AT represents the average seconds taken in successful runs.
-	\item
-	      AFS (Average Flips to Solution): Relating the computational costs to the
-	      number of the basic moves in the search space for a solution has become the
-	      standard measure used for studying the cost of SAT algorithms
-	      \parencite{Singer2000}. AFS represents the average number of bit flips needed
-	      to find a solution in successful runs, which was raised by
-	      \citeauthor{Voss} and used to compare EAs generating new solution
-	      candidates by single bit flips \parencite{Voss}.
-\end{itemize}
+			\caption{Corrective Clause Algorithm}
+			\label{alg:cc} 
+			\end{algorithm}
+			\begin{algorithm}
+				\SetAlgoLined
+				\caption{Fleurent and Ferland Crossover}
+				\label{alg:ff} 
+				\KwData{two parents $X$ and $Y$}
+				\KwResult{one child $Z$}
+				\BlankLine
+				  all the bits of child $Z$ take the values of parent $X$ or parent $Y$ with the equal probability\;
+				\For{each clauses c such that $ sat(X,c) \wedge \neg sat(Y,c)$ (resp. $\neg sat(X,c) \wedge sat(Y,c))$}{
+				  \For{all positions i such that the variable $x_{i}$ appears in c}{
+					$Z\vert i = X \vert i$ (resp. $Z\vert i = Y \vert i$)\;
+				  }{
+				  Set $Z\vert k = flip(X\vert k)$ where $k$ is the position such that $\sigma$ is maximum\;
+				  }
+				}
+			  \end{algorithm}
+			  \begin{algorithm}
+				\SetAlgoLined
+				\caption{Uniform Crossover}
+				\label{alg:uniform} 
+				\KwData{two parents $X$ and $Y$}
+				\KwResult{one child $Z$}
+				\BlankLine
+				\For{each bit $x$}{
+				  $Z\vert x = X\vert x$ or $Z\vert x = Y\vert x$ with equal possibility\;
+				}
+			  \end{algorithm}
+			  \begin{algorithm}
+				\SetAlgoLined
+				\caption{One-point Crossover}
+				\label{alg:onepoint} 
+				\KwData{two parents $X$ and $Y$ }
+				\KwResult{two children $Z_1$ and $Z_2$}
+				\BlankLine
+				\For{each bit $x$ where its position is less than the pivot point}{
+				  $Z_1\vert x = X\vert x$\;
+				  $Z_2\vert x = Y\vert x$\;
+				}
+				\For{each bit x where its position is larger than the pivot point}{
+				  $Z_1\vert x = Y\vert x$\;
+				  $Z_2\vert x = Y\vert x$\;
+				}
+			  \end{algorithm}
+	\begin{itemize}
+		\item
+		      CC (Corrective Clause) Crossover: For each clause c that is unsatisfiable for
+		      both parent X and parent Y solutions and for each variables that appears in
+		      clause c, find the bit position using the literally absolute value
+		      $i$ of the variable that produces the maximum improvement on
+		      two parents guided by the improvement evaluation function. The function equals
+		      to the number of false clauses which become true by flipping the
+		      $ith$ bit in one of the solutions minus the number of
+		      satisfied clauses which become false. Assign the flipped value applied to one
+		      of the parents to the child in the bit position found, and all the bits with
+		      no value of child take the value in corresponding position of parent X or
+		      parent Y with the equal probability. CC crossover is illustrated in detail as Algorithm \ref{alg:cc}.
+			
+		\item
+		      F\&F (Fleurent and Ferland) Crossover: For each clause c that is satisfiable
+		      for one parent and unsatisfiable for the other parent and for each variables
+		      that appears in clause c, the bits positions in the child, corresponding to
+		      the literally absolute value $i$ of the variable in parents,
+		      are assigned values according to the parent satisfying the identified clause.
+		      All the bits with no value of the child take the value in corresponding
+		      position of parent X or parent Y with the equal probability. F\&F crossover is illustrated in detail as Algorithm \ref{alg:ff}.
+			  
+		\item
+		      Uniform Crossover: With equal probability, each bits of the child is chosen
+		      from either parent. In that case, one new offspring is generated. Uniform Crossover is illustrated in detail as Algorithm \ref{alg:uniform}.
+			  
+		\item One-point Crossover: Randomly select one pivot point (ranging between 0 to
+		      length of the bits string) and exchange the substring from that bit point till
+		      the end of the string between the two individuals. In that case, two new
+		      offspring individual are generated. One-point Crossover is illustrated in detail as Algorithm \ref{alg:onepoint}.
+		\item
+		      Two-point Crossover: Randomly pick two pivot points and the bits in between
+		      the two points are swapped between the parent individuals. In that case, two
+		      new offspring individual are generated. Two-point Crossover is illustrated in detail as Algorithm \ref{alg:twopoint}.
+			 
+	\end{itemize}
+	\begin{algorithm}
+				\SetAlgoLined
+				\caption{Two-point Crossover}
+				\label{alg:twopoint} 
+				\KwData{two parents $X$ and $Y$ }
+				\KwResult{two children $Z_1$ and $Z_2$}
+				\BlankLine
+				\For{each bit $x$ where its position is in between the two pivot points}{
+				  $Z_1\vert x = X\vert x$\;
+				  $Z_2\vert x = Y\vert x$\;
+				}
+				\For{each bit $x$ where the position is not in between the two pivot points}{
+				  $Z_1\vert x = Y\vert x$\;
+				  $Z_2\vert x = Y\vert x$\;
+				}
+			  \end{algorithm}
+	
+	\subsubsection{Local search}
+	We implement the idea of mutation in genetic algorithm using WalkSat local search method. It's a randomized local search algorithm. WalkSat is illustrated in detail as Algorithm \ref{alg:walksat}. It attempts to determine the best move by randomly choosing a clause among those that are currently unsatisfied and selecting a variable to flip within it under some conditions. The evaluation function in deciding bits to flip here is called break-count. It equals to the number of satisfied clauses which become unsatisfied by flipping a bit. The maximum number of flips (MAX-Flips) is set to 1000 and the probability of a random move $p$ is set to 0.57 since it's the optimal noise value \parencite{SAO05}. The search stops when one solution is found.
+	
+	\begin{algorithm*}
+	  \SetAlgoLined
+	  \caption{WalkSat Local Search}
+	  \label{alg:walksat} 
+	  \KwData{one child $Z$ generated from the crossover above }
+	  \KwResult{a solution for the instance}
+	  \BlankLine
+	    all the bits of child Z take the values of parent X or parent Y with the equal probability\;
+	  \For{ $i \leftarrow 1$ to MAX-Flips}{
+	    \If{$Z$ is a solution}{
+	      return $Z$\;
+	    }
+	    {Clause C is randomly selected among unsatisfied clauses\;}  
+	    \eIf{$\exists$ variable $c \in C$ with $\operatorname{beak-count}=0$}{
+	      $v\leftarrow c$\;
+	      }{
+	      with probability p:
+	      $v\leftarrow$ a variable x in C chosen randomly\;
+	      with probability 1-p:
+	      $v\leftarrow$ a variable x in C with smallest $\operatorname{beak-count}$ \;
+	      }
+	      {Flip $v$ in Z\;}
+	  }
+	\end{algorithm*}
+	\subsection{Implementation}
+	GNTSAT is implemented in C++. GNTSAT takes a DIMACS CNF file as input and
+	output the resulting bit string if found. User could adjust parameters such as
+	population size, tournament size, and crossover operator.
+	
+	\subsection{Performance measures}
+	After all these processes to generate a solution, we compare our solver using
+	different crossovers and with other existing solvers. Several runs are
+	required for each benchmark instance under consideration and some measuring
+	methods need to be taken for statistically meaningful and also relatively fair
+	results. We take 10 runs and consider three measuring methods: SR (Success
+	rate), AT (Average Time) and AFS (Average Flips to Solution). We will
+	introduce them respectively below.
+	
+	\begin{itemize}
+		\item
+		      SR (Success rate): SR represents the percentage of runs where a solution has
+		      been found within a time limit. Since some runs where the time to get a
+		      solution is too long or the solver is stuck in the local optimal solution, we
+		      use SR to measure the quality of the solver. And the maximum time we set for a
+		      successful run is 120 seconds.
+		\item
+		      AT (Average Time): AT represents the average seconds taken in successful runs.
+		\item
+		      AFS (Average Flips to Solution): Relating the computational costs to the
+		      number of the basic moves in the search space for a solution has become the
+		      standard measure used for studying the cost of SAT algorithms
+		      \parencite{Singer2000}. AFS represents the average number of bit flips needed
+		      to find a solution in successful runs, which was raised by
+		      \citeauthor{Voss} and used to compare EAs generating new solution
+		      candidates by single bit flips \parencite{Voss}.
+	\end{itemize}
