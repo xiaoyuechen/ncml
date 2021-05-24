@@ -28,7 +28,7 @@ Randomly select one pivot point (ranging between 0 to length of the bits string)
 
 Two-point Crossover:
 Randomly pick two pivot points and the bits in between the two points are swapped between the parent individuals. In that case, two new offspring individual are generated.
-mutation operators.\\
+% mutation operators.\\
 \subsection{Local Search}
 We implement the idea of mutation in genetic algorithm using WalkSat local search method. It's a randomized local search algorithm. It attempts to determine the best move by randomly choosing a clause among those that are currently unsatisfied and selecting a variable to flip within it under some conditions. The number of tries (Maxtries) is set to 1000. The search stops when one solution is found.
 
@@ -42,4 +42,4 @@ AT (Average Time):
 AT represents the average seconds taken in successful runs.
 
 AFS (Average Flips to Solution):
-Relating the computational costs to the number of the basic moves in the search space for a solution has become the standard measure used for studying the cost of SAT algorithms\cite{hoos2005stochastic}. AFS represents the average number of bit flips needed to find a solution in successful runs, which is by raised by Gottlieb and Voss (2000) used to compare EAs generating new solution candidates by single bit flips. 
+Relating the computational costs to the number of the basic moves in the search space for a solution has become the standard measure used for studying the cost of SAT algorithms\parencite{Singer2000}. AFS represents the average number of bit flips needed to find a solution in successful runs, which was raised by Gottlieb and Voss (2000) and used to compare EAs generating new solution candidates by single bit flips \parencite{Voss}. 
