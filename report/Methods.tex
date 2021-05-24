@@ -1,17 +1,32 @@
 \section{Methods}
 \subsection{The algorithm}
-The algorithm scheme is described in Fig \ref{fig:1.png}.
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.4\textwidth]{1.png}
-	\caption{Algorithm scheme. The population is initialized randomly.  In each
-		iteration, first using tournament to select some best individuals according to fitness.
-		Then crossover are performed on two individuals among the bests. Each
-		generated child is improved individually using local search, and then new individuals are inserted to the population to replace the old
-		individuals under some conditions. Iterate the process until a solution is
-		found.						}
-	\label{fig:1.png}
-\end{figure}
+The population is initialized randomly.  In each iteration, first using tournament to select some best individuals according to fitness.
+Then crossover are performed on two individuals among the bests. Each
+generated child is improved individually using local search, and then new individuals are inserted to the population to replace the old
+individuals under some conditions. Iterate the process until a solution is found.
+Our SAT Solver is described in detail as Algorithm \ref{alg:sat}.
+\begin{algorithm}
+    \SetAlgoLined
+    \caption{SAT Solver Algorithm}
+    \label{alg:sat} 
+    \KwData{population}
+    \KwResult{a solution for the instance}
+    \BlankLine
+    \While{true}{
+      \If{a solution is found}{
+            return the solution\;
+        }   
+      select some best individuals\;
+      randomly choose two individuals among the bests for crossover\;
+    \For{each each generated child}{
+      local search\;
+      \If{fitness (improved child) > fitness (the oldest individual)}{
+        insert the new child\;
+        remove the oldest individual\;
+    }
+    }
+    }
+  \end{algorithm}
 
 \subsubsection{Representation}
 A candidate solution is a string of bits whose length equals to the number of
