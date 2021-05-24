@@ -9,7 +9,7 @@ The algorithm scheme is described in Fig \ref{fig:1.png}.
 		Then crossover are performed on two individuals among the bests. Each
 		generated child is improved individually using local search, and then new individuals are inserted to the population to replace the old
 		individuals under some conditions. Iterate the process until a solution is
-		found.					      }
+		found.						}
 	\label{fig:1.png}
 \end{figure}
 
@@ -52,12 +52,12 @@ and Two-point Crossover. We will introduce them respectively below.
 	      clause c, find the bit position using the literally absolute value
 	      $i$ of the variable that produces the maximum improvement on
 	      two parents guided by the improvement evaluation function. The function equals
-	      to the number of false clauses which become true by ﬂipping the
-	      $ith$ bit in one of the solutions minus the number of satisﬁed
-	      clauses which become false. Assign the flipped value applied to one of the
-	      parents to the child in the bit position found, and all the bits with no value
-	      of child take the value in corresponding position of parent\_x or parent\_y
-	      with the equal probability.
+	      to the number of false clauses which become true by flipping the
+	      $ith$ bit in one of the solutions minus the number of
+	      satisfied clauses which become false. Assign the flipped value applied to one
+	      of the parents to the child in the bit position found, and all the bits with
+	      no value of child take the value in corresponding position of parent\_x or
+	      parent\_y with the equal probability.
 	\item
 	      F\&F (Fleurent and Ferland) Crossover: For each clause c that is satisfiable
 	      for one parent and unsatisfiable for the other parent and for each variables
