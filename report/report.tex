@@ -3,95 +3,40 @@
 % ========== Preamble (packages, definitions etc.) ==========
 
 \usepackage[utf8]{inputenc}
-\usepackage[english]{babel}
-\usepackage{pdflscape}
 \usepackage{graphicx}
 \usepackage{xcolor}
 \usepackage{amsmath, amsthm, amssymb}
-\usepackage{csquotes}
 \usepackage{hyperref}
 \usepackage{listings}
-\usepackage{lmodern}
 \usepackage{color}
 \usepackage{subfiles}
-\usepackage{multirow} 
-\usepackage{multicol} 
 \usepackage{arydshln}
+\usepackage{multicol}
+\usepackage{multirow}
 \usepackage[absolute]{textpos}
 \usepackage{fancyhdr}
 \usepackage[figuresright]{rotating}
 \usepackage[style=apa]{biblatex}
 \addbibresource{bibliography.bib}
 \newcommand{\todo}[1]{{\color{blue}#1}}  % show to-do items in blue
-\setlength{\parskip}{\baselineskip}
-\usepackage[activate={true,nocompatibility},
-            final,
-            tracking=true,
-            kerning=true,
-            spacing=nonfrench,
-            factor=1100,
-            stretch=10,
-            shrink=10]{microtype}
-\hypersetup{
-    pdftitle={Genetic Algorithm on SAT Problem},
-    bookmarks=true,
-    pdfpagemode=FullScreen,
-}
-
-\newcounter{questionnum} \setcounter{questionnum}{0}
-%\newcommand{\question}[1]{%
-%  \refstepcounter{questionnum}%
-%  \paragraph{Question~\arabic{questionnum}:}{\emph{#1}}}
-
-\newcommand\filltoend{\leavevmode{\unskip
-  \leaders\hrule height.5ex depth\dimexpr-.5ex+0.4pt\hfill\hbox{}%
-  \parfillskip=0pt\endgraf}}
-
-\newcommand{\problem}[2]{%
-	\vspace{-0.7em}
-	\hspace{0.02\textwidth}
-	\begin{minipage}[t][][b]{0.95\textwidth}
-		{\bf \hspace{-0.015\textwidth}\makebox[7.5em][l]{{#1} ~~\filltoend}}%
-		\hspace{1.2mm}{\it #2}%
-	\end{minipage}
-}
-
-\def\email#1{{\tt#1}}
-
-\lstset{ % Set the default style for code listings
-	numbers=left,
-	numberstyle=\scriptsize,
-	numbersep=8pt,
-	basicstyle=\scriptsize\ttfamily,
-	keywordstyle=\color{blue},
-	stringstyle=\color{red},
-	commentstyle=\color{green!70!black},
-	breaklines=true,
-	frame=single,
-	language=C,
-	tabsize=4,
-	showstringspaces=false
-}
-
-\fancypagestyle{lscape}{% 
-\fancyhf{} % clear all header and footer fields 
-\fancyfoot[LE]{%
-\begin{textblock}{20}(1,5){\rotatebox{90}{\leftmark}}\end{textblock}
-\begin{textblock}{1}(13,10.5){\rotatebox{90}{\thepage}}\end{textblock}}
-\fancyfoot[LO] {%
-\begin{textblock}{1}(13,10.5){\rotatebox{90}{\thepage}}\end{textblock}
-\begin{textblock}{20}(1,13.25){\rotatebox{90}{\rightmark}}\end{textblock}}
-\renewcommand{\headrulewidth}{0pt} 
-\renewcommand{\footrulewidth}{0pt}}
+% \lstset{ % Set the default style for code listings
+% 	numbers=left,
+% 	numberstyle=\scriptsize,
+% 	numbersep=8pt,
+% 	basicstyle=\scriptsize\ttfamily,
+% 	keywordstyle=\color{blue},
+% 	stringstyle=\color{red},
+% 	commentstyle=\color{green!70!black},
+% 	breaklines=true,
+% 	frame=single,
+% 	language=C,
+% 	tabsize=4,
+% 	showstringspaces=false
+% }
 
 % ========== Title page ==========
 
-\title{
-	\includegraphics[width=0.6\textwidth]{UU_logo.pdf}\\[1em]
-	Report for Natural Computation Methods for Machine Learning\\[1em]
-	Genetic Algorithm on SAT Problem\\[3em]
-	Group 06
-}
+\title{GNTSAT: a genetic SAT solver based on WalkSat}
 
 \author{
 	Xiaoyue Chen \and
@@ -101,9 +46,7 @@
 
 \begin{document}
 \maketitle
-\thispagestyle{empty} % Removes page number for front page
-\clearpage
-% ========== Document contents ==========
+
 \abstract{
 abstract
 }
@@ -117,5 +60,7 @@ abstract
 \subfile {Experiments}
 \subfile {Discussion}
 \subfile {Conclusion}
+
+\printbibliography
 
 \end{document}
