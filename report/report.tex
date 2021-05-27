@@ -22,22 +22,27 @@
 \usepackage{stfloats}
 %\usepackage[backend=bibtex,style=abbrv]{biblatex}
 \usepackage[
-    style=apa,
-    backend=biber,
-    sortcites=true,
-    sorting=nyt,
-%    isbn=false,
-%    url=false,
-    doi=false,
-%    eprint=false,
-    hyperref=false,
-    backref=false,
-%    firstinits=false,
+	style=apa,
+	backend=biber,
+	sortcites=true,
+	sorting=nyt,
+	%    isbn=false,
+	%    url=false,
+	doi=false,
+	%    eprint=false,
+	hyperref=false,
+	backref=false,
+	%    firstinits=false,
 ]{biblatex}
 \renewcommand*{\revsdnamepunct}{}
 \usepackage[ruled]{algorithm2e}
 \addbibresource{bibliography.bib}
 \newcommand{\todo}[1]{{\color{blue}#1}}  % show to-do items in blue
+\providecommand{\keywords}[1]
+{
+	\small
+	\textbf{\textit{Keywords---}} #1
+}
 % \lstset{ % Set the default style for code listings
 % 	numbers=left,
 % 	numberstyle=\scriptsize,
@@ -58,19 +63,25 @@
 \title{GNTSAT: a SAT solver using genetic algorithms}
 
 \author{
-	Xiaoyue Chen \and
-	Suling Xu \and
-	Qinhan Hou
+	Xiaoyue Chen \and Suling Xu \and Qinhan Hou
 }
 
 \begin{document}
 \maketitle
 
-\abstract{
-In this paper we developed a genetic algorithm-based solver. The algorithm combined crossover from genetic algorithm and used local search to accelerate the searching of global optima. We performed several experiments using different kinds of crossover methods. They are Corrective Crossover(CC), Fleurent and Ferland Crossover(F\&F), Uniform Crossover, One-point and Two-Point Crossover, respectively. The experiments' results have shown that the performance of our solver is better than WalkSAT\parencite{selman1994noise}, which is a popular local search algorithm. In addition, according to the comparison between crossover methods, uniform crossover has been proved the best crossover methods based on dataset we chose.}
-\newline
-\newline
-{\bf Keywords:} genetic algorithm, SAT, NP complete problem
+\begin{abstract}
+	This paper introduces GNTSAT: a genetic algorithm based SAT solver. The GNTSAT
+	algorithm has a static population size and uses genetic crossover operators.
+	It also uses a local search algorithm: \mbox{WalkSAT}
+	\parencite{selman1994noise} as its mutation operator. We made performance comparison
+	between different crossover operators and WalkSAT using uniform random
+	benchmark instances. The results show that GNTSAT outperforms WalkSAT in many
+	benchmark instances, while the different crossover operators have similar
+	performance.
+\end{abstract}
+
+\smallskip
+\keywords{Genetic Algorithm, SAT, NP Complete Problem, Stochastic Local Search}
 
 \subfile{Introduction}
 \subfile{Background}
@@ -84,39 +95,45 @@ In this paper we developed a genetic algorithm-based solver. The algorithm combi
 \clearpage
 
 \begin{sidewaystable*}[htbp]
-\tiny
-\centering
-\renewcommand\arraystretch{2}{
-\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
-\hline
-\multicolumn{2}{|c|}{\multirow{3}{*}{}} & \multicolumn{15}{c|}{Genetic Based-Algorithm}                                                                                                                     & \multicolumn{3}{c|}{\multirow{2}{*}{WalkSAT}}                                          \\ \cline{3-17}
-\multicolumn{2}{|c|}{}                  & \multicolumn{3}{c|}{CC}   & \multicolumn{3}{c|}{FF}   & \multicolumn{3}{c|}{Uniform} & \multicolumn{3}{c|}{OP}   & \multicolumn{3}{c|}{TP}                        & \multicolumn{3}{c|}{}                                                                  \\ \cline{3-20} 
-\multicolumn{2}{|c|}{}                  & AFS       & AT(ms)  & SR  & AFS       & AT(ms)  & SR  & AFS        & AT(ms)   & SR   & AFS       & AT(ms)  & SR  & AFS       & AT(ms)  & SR                       & AFS                           & AT(ms)                      & SR                       \\ \hline
-\multirow{5}{*}{UF-100}      & 0404     & 9177.4    & 53.4    & 1.0 & 9633.0    & 53.7    & 1.0 & 9529.4     & 55.4     & 1.0  & 14731.7   & 79.9    & 1.0 & 16413.6   & 88.2    & 1.0                      & \multicolumn{1}{c|}{7255.5}   & \multicolumn{1}{c|}{41.2}   & 1.0                      \\ \cline{2-20} 
-                             & 0647     & 15930.1   & 87.8    & 1.0 & 24728.8   & 128.5   & 1.0 & 33237.3    & 177.2    & 1.0  & 25046.2   & 131.0   & 1.0 & 31038.8   & 161.2   & 1.0                      & \multicolumn{1}{c|}{28321.3}  & \multicolumn{1}{c|}{147.1}  & 1.0                      \\ \cline{2-20} 
-                             & 0720     & 13826.8   & 76.9    & 1.0 & 27329.1   & 142.2   & 1.0 & 16999.4    & 93.6     & 1.0  & 19317.5   & 102.8   & 1.0 & 16049.8   & 86.1    & 1.0                      & \multicolumn{1}{c|}{11183.2}  & \multicolumn{1}{c|}{61.1}   & 1.0                      \\ \cline{2-20} 
-                             & 0835     & 73864.9   & 386.2   & 1.0 & 120311.8  & 607.4   & 1.0 & 70826.9    & 371.2    & 1.0  & 135137.5  & 685.1   & 1.0 & 104195.1  & 528.3   & 1.0                      & \multicolumn{1}{c|}{73663.1}  & \multicolumn{1}{c|}{376.4}  & 1.0                      \\ \cline{2-20} 
-                             & 0925     & 33489.4   & 178.5   & 1.0 & 28828.7   & 149.2   & 1.0 & 38156.2    & 202.4    & 1.0  & 19596.8   & 103.8   & 1.0 & 33367.7   & 172.9   & 1.0                      & \multicolumn{1}{c|}{24007.9}  & \multicolumn{1}{c|}{124.9}  & 1.0                      \\ \hline
-\multirow{5}{*}{UF-150}      & 016      & 21526.1   & 169.6   & 1.0 & 10625.7   & 82.3    & 1.0 & 20516.0    & 162.2    & 1.0  & 21600.0   & 165.5   & 1.0 & 22829.2   & 174.7   & \multicolumn{1}{c|}{1.0} & \multicolumn{1}{c|}{17521.0}  & \multicolumn{1}{c|}{136.4}  & \multicolumn{1}{c|}{1.0} \\ \cline{2-20} 
-                             & 025      & 410056.8  & 3116.7  & 1.0 & 148867.1  & 1092.7  & 1.0 & 234302.9   & 1780.7   & 1.0  & 178405.0  & 1321.9  & 1.0 & 178955.2  & 1327.7  & \multicolumn{1}{c|}{1.0} & \multicolumn{1}{c|}{248282.3} & \multicolumn{1}{c|}{1874.6} & \multicolumn{1}{c|}{1.0} \\ \cline{2-20} 
-                             & 027      & 1556158.2 & 11978.0 & 1.0 & 201949.8  & 1478.6  & 1.0 & 637603.0   & 4864.7   & 1.0  & 366749.4  & 2717.2  & 1.0 & 319983.2  & 2373.6  & \multicolumn{1}{c|}{1.0} & \multicolumn{1}{c|}{282071.3} & \multicolumn{1}{c|}{2127.9} & \multicolumn{1}{c|}{1.0} \\ \cline{2-20} 
-                             & 089      & 34081.2   & 264.8   & 1.0 & 44668.5   & 328.2   & 1.0 & 57147.8    & 439.4    & 1.0  & 54248.0   & 405.8   & 1.0 & 36884.2   & 279.0   & 1.0                      & \multicolumn{1}{c|}{45971.1}  & \multicolumn{1}{c|}{350.7}  & 1.0                      \\ \cline{2-20} 
-                             & 093      & 16817.7   & 134.0   & 1.0 & 14447.8   & 110.4   & 1.0 & 17689.0    & 140.8    & 1.0  & 37797.9   & 284.9   & 1.0 & 33640.0   & 254.2   & 1.0                      & \multicolumn{1}{c|}{24792.6}  & \multicolumn{1}{c|}{191.3}  & 1.0                      \\ \hline
-\multirow{5}{*}{UF-200}      & 018      & 371425.5  & 3706.8  & 1.0 & 314467.2  & 3002.8  & 1.0 & 383495.1   & 3840.5   & 1.0  & 270917.4  & 2641.1  & 1.0 & 505483.3  & 4927.6  & 1.0                      & 279120.8                      & 2803.0                      & 1.0                      \\ \cline{2-20} 
-                             & 024      & 1337897.9 & 13435.2 & 1.0 & 907525.4  & 8847.3  & 1.0 & 1213634.6  & 12200.6  & 1.0  & 1362716.6 & 13389.9 & 1.0 & 975747.7  & 9542.9  & 1.0                      & 2346452.8                     & 23529.8                     & 0.9                      \\ \cline{2-20} 
-                             & 051      & 1074383.1 & 10784.6 & 1.0 & 1365475.4 & 13591.9 & 1.0 & 935085.4   & 9385.3   & 1.0  & 1209651.5 & 11847.2 & 1.0 & 887628.7  & 8684.6  & 1.0                      & 2396565.5                     & 24034.6                     & 1.0                      \\ \cline{2-20} 
-                             & 068      & 3074382.4 & 31095.2 & 0.5 & 2675314.1 & 26672.3 & 0.6 & 479945.1   & 14907.8  & 0.7  & 4232634.8 & 41823.3 & 0.6 & 1740682.9 & 17109.7 & 1.0                      & 1802523.3                     & 18111.5                     & 0.6                      \\ \cline{2-20} 
-                             & 072      & 59105.7   & 593.8   & 1.0 & 37188.5   & 352.9   & 1.0 & 82337.7    & 827.5    & 1.0  & 83066.0   & 813.8   & 1.0 & 53628.1   & 527.8   & 1.0                      & 82984.3                       & 836.6                       & 1.0                      \\ \hline
-\multirow{5}{*}{UF-250}      & 004      & 886070.3  & 10958.0 & 1.0 & 820759.3  & 9799.9  & 1.0 & 844263.0   & 10432.6  & 1.0  & 994404.5  & 12008.9 & 1.0 & 682684.1  & 8227.3  & 1.0                      & 4053239.0                     & 50826.1                     & 1.0                      \\ \cline{2-20} 
-                             & 005      & 1056567.4 & 13096.9 & 1.0 & 1046032.8 & 12579.3 & 1.0 & 1145335.5  & 14195.0  & 1.0  & 990259.0  & 11972.8 & 1.0 & 1382175.6 & 16753.1 & 1.0                      & 5483059.7                     & 68762.1                     & 0.8                      \\ \cline{2-20} 
-                             & 008      & 4402336.0 & 55131.0 & 0.4 & 3598460.5 & 44488.0 & 0.4 & 3369114.6  & 42127.8  & 0.6  & 6358087.1 & 77834.5 & 0.6 & 7008261.7 & 85854.2 & 0.4                      & \textbackslash{}              & \textbackslash{}            & 0                        \\ \cline{2-20} 
-                             & 009      & 3670606.3 & 45996.5 & 0.9 & 4414599.2 & 54914.8 & 1.0 & 4012810.7  & 50326.5  & 1.0  & 3446733.4 & 42100.3 & 0.9 & 2886818.8 & 35266.3 & 0.8                      & 4588804.5                     & 57555.5                     & 0.2                      \\ \cline{2-20} 
-                             & 011      & 2633192.1 & 32936.5 & 1.0 & 1501120.3 & 18285.3 & 1.0 & 1216875.7  & 15107.6  & 1.0  & 1123454.1 & 13590.2 & 1.0 & 978018.1  & 11830.0 & 0.9                      & 6556025.0                     & 82199.6                     & 0.3                      \\ \hline
-\end{tabular}
-}
-\caption{Experiments Results. The column 'AFS' represents the average flip times over ten times running, which represents the computation complexity of the algorithm. The column 'AT' represents the average time usage over ten times running, which represents the time complexity of the algorithm. The column 'SR' represents the success rate of the algorithm. '\textbackslash' means that there were no available solution for the algorithm in the certain dataset. 'OP' means 'one-point crossover and 'TP' means 'two-point crossover' in the table.}
-\label{tab:results.}
-\end{sidewaystable*} 
+	\tiny
+	\centering
+	\renewcommand\arraystretch{2}{
+		\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+			\hline
+			\multicolumn{2}{|c|}{\multirow{3}{*}{}} & \multicolumn{15}{c|}{Genetic Based-Algorithm} & \multicolumn{3}{c|}{\multirow{2}{*}{WalkSAT}}                                                                                                                                                                                                                                                                                                                    \\ \cline{3-17}
+			\multicolumn{2}{|c|}{}                  & \multicolumn{3}{c|}{CC}                       & \multicolumn{3}{c|}{FF}                       & \multicolumn{3}{c|}{Uniform} & \multicolumn{3}{c|}{OP} & \multicolumn{3}{c|}{TP} & \multicolumn{3}{c|}{}                                                                                                                                                                                                         \\ \cline{3-20}
+			\multicolumn{2}{|c|}{}                  & AFS                                           & AT(ms)                                        & SR                           & AFS                     & AT(ms)                  & SR                    & AFS & AT(ms)    & SR      & AFS & AT(ms)    & SR      & AFS & AT(ms)    & SR      & AFS                      & AT(ms)                        & SR                                                     \\ \hline
+			\multirow{5}{*}{UF-100}                 & 0404                                          & 9177.4                                        & 53.4                         & 1.0                     & 9633.0                  & 53.7                  & 1.0 & 9529.4    & 55.4    & 1.0 & 14731.7   & 79.9    & 1.0 & 16413.6   & 88.2    & 1.0                      & \multicolumn{1}{c|}{7255.5}   & \multicolumn{1}{c|}{41.2}   & 1.0                      \\ \cline{2-20}
+			                                        & 0647                                          & 15930.1                                       & 87.8                         & 1.0                     & 24728.8                 & 128.5                 & 1.0 & 33237.3   & 177.2   & 1.0 & 25046.2   & 131.0   & 1.0 & 31038.8   & 161.2   & 1.0                      & \multicolumn{1}{c|}{28321.3}  & \multicolumn{1}{c|}{147.1}  & 1.0                      \\ \cline{2-20}
+			                                        & 0720                                          & 13826.8                                       & 76.9                         & 1.0                     & 27329.1                 & 142.2                 & 1.0 & 16999.4   & 93.6    & 1.0 & 19317.5   & 102.8   & 1.0 & 16049.8   & 86.1    & 1.0                      & \multicolumn{1}{c|}{11183.2}  & \multicolumn{1}{c|}{61.1}   & 1.0                      \\ \cline{2-20}
+			                                        & 0835                                          & 73864.9                                       & 386.2                        & 1.0                     & 120311.8                & 607.4                 & 1.0 & 70826.9   & 371.2   & 1.0 & 135137.5  & 685.1   & 1.0 & 104195.1  & 528.3   & 1.0                      & \multicolumn{1}{c|}{73663.1}  & \multicolumn{1}{c|}{376.4}  & 1.0                      \\ \cline{2-20}
+			                                        & 0925                                          & 33489.4                                       & 178.5                        & 1.0                     & 28828.7                 & 149.2                 & 1.0 & 38156.2   & 202.4   & 1.0 & 19596.8   & 103.8   & 1.0 & 33367.7   & 172.9   & 1.0                      & \multicolumn{1}{c|}{24007.9}  & \multicolumn{1}{c|}{124.9}  & 1.0                      \\ \hline
+			\multirow{5}{*}{UF-150}                 & 016                                           & 21526.1                                       & 169.6                        & 1.0                     & 10625.7                 & 82.3                  & 1.0 & 20516.0   & 162.2   & 1.0 & 21600.0   & 165.5   & 1.0 & 22829.2   & 174.7   & \multicolumn{1}{c|}{1.0} & \multicolumn{1}{c|}{17521.0}  & \multicolumn{1}{c|}{136.4}  & \multicolumn{1}{c|}{1.0} \\ \cline{2-20}
+			                                        & 025                                           & 410056.8                                      & 3116.7                       & 1.0                     & 148867.1                & 1092.7                & 1.0 & 234302.9  & 1780.7  & 1.0 & 178405.0  & 1321.9  & 1.0 & 178955.2  & 1327.7  & \multicolumn{1}{c|}{1.0} & \multicolumn{1}{c|}{248282.3} & \multicolumn{1}{c|}{1874.6} & \multicolumn{1}{c|}{1.0} \\ \cline{2-20}
+			                                        & 027                                           & 1556158.2                                     & 11978.0                      & 1.0                     & 201949.8                & 1478.6                & 1.0 & 637603.0  & 4864.7  & 1.0 & 366749.4  & 2717.2  & 1.0 & 319983.2  & 2373.6  & \multicolumn{1}{c|}{1.0} & \multicolumn{1}{c|}{282071.3} & \multicolumn{1}{c|}{2127.9} & \multicolumn{1}{c|}{1.0} \\ \cline{2-20}
+			                                        & 089                                           & 34081.2                                       & 264.8                        & 1.0                     & 44668.5                 & 328.2                 & 1.0 & 57147.8   & 439.4   & 1.0 & 54248.0   & 405.8   & 1.0 & 36884.2   & 279.0   & 1.0                      & \multicolumn{1}{c|}{45971.1}  & \multicolumn{1}{c|}{350.7}  & 1.0                      \\ \cline{2-20}
+			                                        & 093                                           & 16817.7                                       & 134.0                        & 1.0                     & 14447.8                 & 110.4                 & 1.0 & 17689.0   & 140.8   & 1.0 & 37797.9   & 284.9   & 1.0 & 33640.0   & 254.2   & 1.0                      & \multicolumn{1}{c|}{24792.6}  & \multicolumn{1}{c|}{191.3}  & 1.0                      \\ \hline
+			\multirow{5}{*}{UF-200}                 & 018                                           & 371425.5                                      & 3706.8                       & 1.0                     & 314467.2                & 3002.8                & 1.0 & 383495.1  & 3840.5  & 1.0 & 270917.4  & 2641.1  & 1.0 & 505483.3  & 4927.6  & 1.0                      & 279120.8                      & 2803.0                      & 1.0                      \\ \cline{2-20}
+			                                        & 024                                           & 1337897.9                                     & 13435.2                      & 1.0                     & 907525.4                & 8847.3                & 1.0 & 1213634.6 & 12200.6 & 1.0 & 1362716.6 & 13389.9 & 1.0 & 975747.7  & 9542.9  & 1.0                      & 2346452.8                     & 23529.8                     & 0.9                      \\ \cline{2-20}
+			                                        & 051                                           & 1074383.1                                     & 10784.6                      & 1.0                     & 1365475.4               & 13591.9               & 1.0 & 935085.4  & 9385.3  & 1.0 & 1209651.5 & 11847.2 & 1.0 & 887628.7  & 8684.6  & 1.0                      & 2396565.5                     & 24034.6                     & 1.0                      \\ \cline{2-20}
+			                                        & 068                                           & 3074382.4                                     & 31095.2                      & 0.5                     & 2675314.1               & 26672.3               & 0.6 & 479945.1  & 14907.8 & 0.7 & 4232634.8 & 41823.3 & 0.6 & 1740682.9 & 17109.7 & 1.0                      & 1802523.3                     & 18111.5                     & 0.6                      \\ \cline{2-20}
+			                                        & 072                                           & 59105.7                                       & 593.8                        & 1.0                     & 37188.5                 & 352.9                 & 1.0 & 82337.7   & 827.5   & 1.0 & 83066.0   & 813.8   & 1.0 & 53628.1   & 527.8   & 1.0                      & 82984.3                       & 836.6                       & 1.0                      \\ \hline
+			\multirow{5}{*}{UF-250}                 & 004                                           & 886070.3                                      & 10958.0                      & 1.0                     & 820759.3                & 9799.9                & 1.0 & 844263.0  & 10432.6 & 1.0 & 994404.5  & 12008.9 & 1.0 & 682684.1  & 8227.3  & 1.0                      & 4053239.0                     & 50826.1                     & 1.0                      \\ \cline{2-20}
+			                                        & 005                                           & 1056567.4                                     & 13096.9                      & 1.0                     & 1046032.8               & 12579.3               & 1.0 & 1145335.5 & 14195.0 & 1.0 & 990259.0  & 11972.8 & 1.0 & 1382175.6 & 16753.1 & 1.0                      & 5483059.7                     & 68762.1                     & 0.8                      \\ \cline{2-20}
+			                                        & 008                                           & 4402336.0                                     & 55131.0                      & 0.4                     & 3598460.5               & 44488.0               & 0.4 & 3369114.6 & 42127.8 & 0.6 & 6358087.1 & 77834.5 & 0.6 & 7008261.7 & 85854.2 & 0.4                      & \textbackslash{}              & \textbackslash{}            & 0                        \\ \cline{2-20}
+			                                        & 009                                           & 3670606.3                                     & 45996.5                      & 0.9                     & 4414599.2               & 54914.8               & 1.0 & 4012810.7 & 50326.5 & 1.0 & 3446733.4 & 42100.3 & 0.9 & 2886818.8 & 35266.3 & 0.8                      & 4588804.5                     & 57555.5                     & 0.2                      \\ \cline{2-20}
+			                                        & 011                                           & 2633192.1                                     & 32936.5                      & 1.0                     & 1501120.3               & 18285.3               & 1.0 & 1216875.7 & 15107.6 & 1.0 & 1123454.1 & 13590.2 & 1.0 & 978018.1  & 11830.0 & 0.9                      & 6556025.0                     & 82199.6                     & 0.3                      \\ \hline
+		\end{tabular}
+	}
+	\caption{Experiments Results. The column 'AFS' represents the average flip times over
+		ten times running, which represents the computation complexity of the algorithm. The column 'AT'
+		represents the average time usage over ten times running, which represents the time complexity of the algorithm. The column 'SR'
+		represents the success rate of the algorithm. '\textbackslash' means that
+		there were no available solution for the algorithm in the certain dataset.
+		'OP' means 'one-point crossover and 'TP' means 'two-point crossover' in the
+		table.}
+	\label{tab:results.}
+\end{sidewaystable*}
 \clearpage
 
 \end{document}
