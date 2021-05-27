@@ -21,7 +21,20 @@
 \usepackage{caption}
 \usepackage{stfloats}
 %\usepackage[backend=bibtex,style=abbrv]{biblatex}
-\usepackage[style=apa]{biblatex}
+\usepackage[
+    style=apa,
+    backend=biber,
+    sortcites=true,
+    sorting=nyt,
+%    isbn=false,
+%    url=false,
+    doi=false,
+%    eprint=false,
+    hyperref=false,
+    backref=false,
+%    firstinits=false,
+]{biblatex}
+\renewcommand*{\revsdnamepunct}{}
 \usepackage[ruled]{algorithm2e}
 \addbibresource{bibliography.bib}
 \newcommand{\todo}[1]{{\color{blue}#1}}  % show to-do items in blue
@@ -42,7 +55,7 @@
 
 % ========== Title page ==========
 
-\title{GNTSAT: a genetic SAT solver based on WalkSAT}
+\title{GNTSAT: a SAT solver using genetic algorithms}
 
 \author{
 	Xiaoyue Chen \and
