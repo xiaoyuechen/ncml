@@ -1,13 +1,13 @@
 \section{Discussions}
-In this section, we analyze the causes of the performance difference between
+In this section, we analyze the cause of the performance difference between
 GNTSAT and WalkSAT.
 
-\subsection{Different crossover methods}
+\subsection{Different Crossover Methods}
 In our experiments, we performed five different crossover methods. We could
 find that uniform method got the best result in our experiments. It would not
-surprise us because CC and F&F are based on uniform crossover so they would do
+surprise us because CC and F\&F are based on uniform crossover so they would do
 more bit flips and take more time than uniform crossover. We have observed
-that using CC and F&F crossover would make it faster to converge on low
+that using CC and F\&F crossover would make it faster to converge on low
 variable number benchmarks, and we believe that they would show more
 advantages if we have more complex experiments. On the other hand, one-point
 and two-point crossover are much more similar. These two kinds of methods are
@@ -43,7 +43,7 @@ $k$ descenting operations. This requirement is very hard to
 satisfy on difficult SAT instances where the ``distances'' between the global
 minima and a random starting point are usually large. In these cases, WalkSAT
 will have to restart for many times to search for a starting point which is
-close enough to the global minimum. WalkSAT degrades to random search when searching
+close enough to the solution. WalkSAT degrades to random search when searching
 for the starting point. This is suboptimal if the search space is huge.
 
 On the other hand GNTSAT explores the search space by randomly choosing many
@@ -58,7 +58,7 @@ corresponds to replacing the oldest points in the search space with the new
 points. This procedure is repeated until a global minimum is found.
 
 An advantage of exploring the search space in this way is that a point could
-be used to create new points which are likely to be close to it. The new points
+be used to create new points which are likely be close to it. The new points
 will then be descented using stochastic local search. This removes the
 requirement that one of the starting points must be within
 $k$ descenting operations from the global minimum. Note
