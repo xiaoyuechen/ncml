@@ -11,22 +11,29 @@ obvious importance.
 
 There are two types of SAT solver technologies: complete methods and
 incomplete methods. Complete methods can guarantee to eventually report a
-satisfying assignment or prove not satisfiable, long enough time.
-Complete methods have an exponential time complexity if P
-$\neq$ NP. On the other hand, incomplete methods have no such
-guarantee and generally use stochastic local search \parencite{gomes_kautz_sabharwal_selman_2008}. In
-many cases where the problem does not require a definitive answer, incomplete
-methods could outperform complete methods in terms of both speed and memory
-usage.
+satisfying assignment or prove not satisfiable, long enough time. Complete
+methods have an exponential time complexity if P $\neq$ NP. On
+the other hand, incomplete methods have no such guarantee and generally use
+stochastic local search \parencite{gomes_kautz_sabharwal_selman_2008}. In many cases where the problem
+does not require a definitive answer, incomplete methods could outperform
+complete methods in terms of both speed and memory usage.
 
-Genetic algorithms (GAs) are incomplete methods that have been applied to many
-NP-complete problems, including SAT \parencite{gottlieb_marchiori_rossi_2002}. However, results
-suggest that classical GAs may not outperform local search algorithms
-\parencite{de1989using}. Nevertheless, recent results show that GAs can yield
-good results if combined with other methods \parencite{gottlieb_marchiori_rossi_2002}.
+Both stochastic local search algorithms (SLSs) and Genetic algorithms (GAs)
+are incomplete methods that have been applied to many NP-complete problems,
+including the SAT problem \parencite{gottlieb_marchiori_rossi_2002}.  WalkSAT
+\parencite{selman1994noise} is a successful local search algorithm for the SAT
+problem. It introduces noise into search in the form of uphill moves
+\parencite{biere2009handbook}. WalkSAT combines greedy descent with noises (uphill
+``random walk'' moves). The results of this method show significantly
+improvement over the greedy algorithms.
+
+On the other hand, results suggest that classical GAs may not outperform local
+search algorithms \parencite{de1989using}. Nevertheless, recent results show
+that GAs can yield good results if combined with other methods
+\parencite{gottlieb_marchiori_rossi_2002}.
 
 This paper proposes a genetic algorithm: GNTSAT, which is based on WalkSAT
-\parencite{selman1994noise} and outperforms WalkSAT in many benchmark instances.
-This paper introduces the GNTSAT algorithm, makes performance evaluations
-based on benchmarks, and discusses the possible reasons for the performance
-difference and their implications.
+\parencite{selman1994noise} and outperforms WalkSAT in many benchmark instances. We
+will introduces the GNTSAT algorithm, make performance evaluations based on
+benchmarks, and discuss the possible reasons for the performance difference
+and their implications.
