@@ -2,12 +2,12 @@
 In this section, we analyze the causes of the performance difference between
 GNTSAT and WalkSAT.
 
-\subsection{Different Crossover Methods}
+\subsection{Different crossover methods}
 In our experiments, we performed five different crossover methods. We could
 find that uniform method got the best result in our experiments. It would not
-surprise us because CC and FF are based on uniform crossover so they would do
+surprise us because CC and F&F are based on uniform crossover so they would do
 more bit flips and take more time than uniform crossover. We have observed
-that using CC and FF crossover would make it faster to converge on low
+that using CC and F&F crossover would make it faster to converge on low
 variable number benchmarks, and we believe that they would show more
 advantages if we have more complex experiments. On the other hand, one-point
 and two-point crossover are much more similar. These two kinds of methods are

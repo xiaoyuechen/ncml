@@ -5,11 +5,11 @@ tournament to select some best individuals according to fitness. Then
 crossover are performed on two individuals among the bests. Each generated
 child is improved individually using local search, and then new individuals
 are inserted to the population to replace the old individuals under some
-conditions. Iterate the process until a solution is found. Our GNTSAT Solver
+conditions. Iterate the process until a solution is found. Our GNTSAT solver
 is described in detail as Algorithm \ref{alg:sat}.
 \begin{algorithm}
 	\SetAlgoLined
-	\caption{SAT Solver Algorithm}
+	\caption{GNTSAT solver}
 	\label{alg:sat}
 	\KwData{population}
 	\KwResult{a solution for the instance}
@@ -58,13 +58,13 @@ parents will be selected randomly from this pool.
 \subsubsection{Crossover operators}
 The main goal of the crossover operator in GNTSAT is to create potentially
 promising new individuals. Using the selected parents, there are many ways for
-them to crossover, and we consider 5 types: CC (Corrective Clause) Crossover,
-F\&F (Fleurent and Ferland) Crossover, Uniform Crossover, One-point Crossover
-and Two-point Crossover. We will introduce them respectively below.
+them to crossover, and we consider 5 types: CC (Corrective Clause) crossover,
+F\&F (Fleurent and Ferland) crossover, uniform crossover, one-point crossover
+and two-point crossover. We will introduce them respectively below.
 
 \begin{itemize}
 	\item
-	      CC (Corrective Clause) Crossover: For each clause c that is unsatisfiable for
+	      CC (Corrective Clause) crossover: For each clause c that is unsatisfiable for
 	      both parent X and parent Y solutions and for each variables that appears in
 	      clause c, find the bit position using the literally absolute value
 	      $i$ of the variable that produces the maximum improvement
@@ -92,12 +92,12 @@ and Two-point Crossover. We will introduce them respectively below.
 				      Set $Z\vert k = flip(X\vert k)$ where $k$ is the position such
 				      that $\sigma$ is maximum\;
 			      }
-		      } \caption{CC Crossover}
+		      } \caption{CC crossover}
 		      \label{alg:cc}
 	      \end{algorithm}
 
 	\item
-	      F\&F (Fleurent and Ferland) Crossover: For each clause c that is satisfiable
+	      F\&F (Fleurent and Ferland) crossover: For each clause c that is satisfiable
 	      for one parent and unsatisfiable for the other parent and for each variables
 	      that appears in clause c, the bits positions in the child, corresponding to
 	      the literally absolute value $i$ of the variable in
@@ -108,7 +108,7 @@ and Two-point Crossover. We will introduce them respectively below.
 
 	      \begin{algorithm}
 		      \SetAlgoLined
-		      \caption{F\&F Crossover}
+		      \caption{F\&F crossover}
 		      \label{alg:ff}
 		      \KwData{two parents $X$ and $Y$}
 		      \KwResult{one child $Z$}
@@ -126,13 +126,13 @@ and Two-point Crossover. We will introduce them respectively below.
 	      \end{algorithm}
 
 	\item
-	      Uniform Crossover: With equal probability, each bits of the child is chosen
+	      Uniform crossover: With equal probability, each bits of the child is chosen
 	      from either parent. In that case, one new offspring is generated. See
 	      Algorithm \ref{alg:uniform}.
 
 	      \begin{algorithm}
 		      \SetAlgoLined
-		      \caption{Uniform Crossover}
+		      \caption{Uniform crossover}
 		      \label{alg:uniform}
 		      \KwData{two parents $X$ and $Y$}
 		      \KwResult{one child $Z$}
@@ -142,14 +142,14 @@ and Two-point Crossover. We will introduce them respectively below.
 		      }
 	      \end{algorithm}
 
-	\item One-point Crossover: Randomly select one pivot point (ranging between 0 to
+	\item One-point crossover: Randomly select one pivot point (ranging between 0 to
 	      length of the bits string) and exchange the substring from that bit point till
 	      the end of the string between the two individuals. In that case, two new
 	      offspring individual are generated. See Algorithm \ref{alg:onepoint}.
 
 	      \begin{algorithm}[t]
 		      \SetAlgoLined
-		      \caption{One-point Crossover}
+		      \caption{One-point crossover}
 		      \label{alg:onepoint}
 		      \KwData{two parents $X$ and $Y$ }
 		      \KwResult{two children $Z_1$ and $Z_2$}
@@ -166,13 +166,13 @@ and Two-point Crossover. We will introduce them respectively below.
 	      \end{algorithm}
 
 	\item
-	      Two-point Crossover: Randomly pick two pivot points and the bits in between
+	      Two-point crossover: Randomly pick two pivot points and the bits in between
 	      the two points are swapped between the parent individuals. In that case, two
 	      new offspring individual are generated. See Algorithm \ref{alg:twopoint}.
 
 	      \begin{algorithm}[t]
 		      \SetAlgoLined
-		      \caption{Two-point Crossover}
+		      \caption{Two-point crossover}
 		      \label{alg:twopoint}
 		      \KwData{two parents $X$ and $Y$ }
 		      \KwResult{two children $Z_1$ and $Z_2$}
