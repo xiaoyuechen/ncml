@@ -19,7 +19,7 @@ is described in detail as Algorithm \ref{alg:sat}.
 			return the solution\;
 		}
 		select some best individuals\; randomly choose two individuals among the bests
-		for crossover\; \For{each each generated child}{
+		for crossover\; \For{each generated child}{
 			local search\; \If{fitness (improved child) $>$ fitness (the oldest individual)}{
 				insert the new child\; remove the oldest individual\;
 			}
@@ -58,13 +58,13 @@ parents will be selected randomly from this pool.
 \subsubsection{Crossover operators}
 The main goal of the crossover operator in GNTSAT is to create potentially
 promising new individuals. Using the selected parents, there are many ways for
-them to crossover, and we consider 5 types: CC (Corrective Clause) crossover,
-F\&F (Fleurent and Ferland) crossover, uniform crossover, one-point crossover
+them to crossover, and we consider 5 types: Corrective Clause (CC) crossover,
+Fleurent and Ferland (F\&F) crossover, uniform crossover, one-point crossover
 and two-point crossover. We will introduce them respectively below.
 
 \begin{itemize}
 	\item
-	      CC (Corrective Clause) crossover: For each clause c that is unsatisfiable for
+	      Corrective Clause (CC) crossover: For each clause c that is unsatisfiable for
 	      both parent X and parent Y solutions and for each variables that appears in
 	      clause c, find the bit position using the literally absolute value
 	      $i$ of the variable that produces the maximum improvement
@@ -97,7 +97,7 @@ and two-point crossover. We will introduce them respectively below.
 	      \end{algorithm}
 
 	\item
-	      F\&F (Fleurent and Ferland) crossover: For each clause c that is satisfiable
+	      Fleurent and Ferland (F\&F) crossover: For each clause c that is satisfiable
 	      for one parent and unsatisfiable for the other parent and for each variables
 	      that appears in clause c, the bits positions in the child, corresponding to
 	      the literally absolute value $i$ of the variable in
@@ -202,7 +202,7 @@ unsatisfied by flipping a bit. The search stops when one solution is found.
 
 \begin{algorithm*}[t]
 	\SetAlgoLined
-	\caption{WalkSat Local Search}
+	\caption{WalkSAT local search}
 	\label{alg:walksat}
 	\KwData{one child $Z$ generated from the crossover above }
 	\KwResult{a solution for the instance}
@@ -241,15 +241,15 @@ measuring methods: SR (Success rate), AT (Average Time) and AFS (Average Flips
 to Solution). We will introduce them respectively below.
 \begin{itemize}
 	\item
-	      SR (Success rate): SR represents the percentage of runs where a solution has
+	      Success rate (SR): SR represents the percentage of runs where a solution has
 	      been found within a time limit. Since some runs where the time to get a
 	      solution is too long or the solver is stuck in the local optimal solution, we
 	      set a maximum time for a successful run and use SR to measure the quality of
 	      the solver.
 	\item
-	      AT (Average Time): AT represents the average seconds taken in successful runs.
+	      Average Time (AT): AT represents the average seconds taken in successful runs.
 	\item
-	      AFS (Average Flips to Solution): Relating the computational costs to the
+	      Average Flips to Solution (AFS): Relating the computational costs to the
 	      number of the basic moves in the search space for a solution has become the
 	      standard measure used for studying the cost of SAT algorithms
 	      \parencite{Singer2000}. AFS represents the average number of bit flips needed
