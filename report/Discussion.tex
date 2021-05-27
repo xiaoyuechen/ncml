@@ -1,20 +1,20 @@
 \section{Discussions}
-In this section, we analyze the causes of the performance difference between
-GNTSAT and WalkSAT.
+In this section, we analyze the effects of different crossovers and the causes
+of the performance difference between GNTSAT and WalkSAT. We will also point
+out the limitations of this study.
 
-\subsection{Different crossover methods}
-In our experiments, we performed five different crossover methods. We could
-find that uniform method got the best result in our experiments. It would not
-surprise us because CC and F&F are based on uniform crossover so they would do
-more bit flips and take more time than uniform crossover. We have observed
-that using CC and F&F crossover would make it faster to converge on low
-variable number benchmarks, and we believe that they would show more
-advantages if we have more complex experiments. On the other hand, one-point
-and two-point crossover are much more similar. These two kinds of methods are
-doing consequent bit string swapping. However, this kind of swapping would
-help little for our searching because clauses rarely include consequent bit
-string. Thus, the only advance these two kinds of crossover giving us would be
-maintaining population diversity.
+\subsection{Different crossover operators}
+In our experiments, we compared five different crossover methods. The results
+show that different crossover operators have similar performance in terms of
+both success rate and the average amount of computation required to produce
+solutions.
+
+On average, uniform crossover slightly outperform other types of crossovers in
+most of the benchmark instances, in terms of both success rate and
+computation. However, this would need to be further studied with more
+benchmark instances and different parameters to confirm the statistical
+significance. Hence we will not draw conclusions on the effects of different
+crossovers until further studies are done.
 
 \subsection{The search space}
 \citeauthor{biere2009handbook} (\citeyear{biere2009handbook}) proposes a way to view the search space of
@@ -37,38 +37,65 @@ and repeat the process until a global minimum is found. The greedy strategy
 with noises refers to committing ``greedy'' moves or ``random walk'' moves
 according to some probability.
 
-One limitaion of the way WalkSAT explores the search space is that it requires
-to start at a point from which a global minimum could be reached within
-$k$ descenting operations. This requirement is very hard to
-satisfy on difficult SAT instances where the ``distances'' between the global
-minima and a random starting point are usually large. In these cases, WalkSAT
-will have to restart for many times to search for a starting point which is
-close enough to the global minimum. WalkSAT degrades to random search when searching
-for the starting point. This is suboptimal if the search space is huge.
-
-On the other hand GNTSAT explores the search space by randomly choosing many
+On the other hand, GNTSAT explores the search space by randomly choosing many
 points as its population. It then selects parent points with probability
-proportional to their heights (lower points are more likely to be selected),
-and uses crossover to generate children. The effects of crossover could be
-viewed as generating new points in the search space. The new points would be
-close to their parents' points if the parents are similar to each other. Then
-the same greedy descents with noises are performed on the children. The
-children will replace the oldest individuals in the population, which
-corresponds to replacing the oldest points in the search space with the new
-points. This procedure is repeated until a global minimum is found.
+proportional to their heights in the landscape (lower points are more likely
+to be selected), and uses crossover to generate children. The effects of
+crossover could be viewed as generating new points in the search space. The
+new points would be close to their parents' points if the parents are similar
+to each other. Then the same greedy descents with noises are performed on the
+children. The children will replace the oldest individuals in the population,
+which corresponds to replacing the oldest points in the search space. This
+procedure is repeated until a global minimum is found.
 
-An advantage of exploring the search space in this way is that a point could
-be used to create new points which are likely to be close to it. The new points
-will then be descented using stochastic local search. This removes the
+\subsection{Improvements of GNTSAT}
+One limitation of the way WalkSAT explores the search space is that it
+requires to start at a point from which a global minimum could be reached
+within $k$ descenting operations. This requirement is very
+hard to satisfy on difficult SAT instances where the ``distances'' between the
+global minima and a random starting point are usually large. In these cases,
+WalkSAT will have to restart for many times to search for a starting point
+which is close enough to the global minimum. WalkSAT degrades to random search
+when searching for the starting point. This is suboptimal if the search space
+is huge.
+
+An advantage of GNTSAT's exploration in the search space is that a point could
+be used to create new points which are likely to be close to it. The new
+points will then be descented using stochastic local search. This removes the
 requirement that one of the starting points must be within
 $k$ descenting operations from the global minimum. Note
 that close children are only created when their parents are close. The parents
 being close means there are multiple points converging to similar points, and
 the heights of the points are among the lowest (otherwise the parents are not
-likely to be selected). This in term implies GNTSAT would only continue the local
-search on points that are converged towards from multiple other points, which saves
-computation.
+likely to be selected). This in term implies GNTSAT would most likely continue
+the local search on points which multiple other points converge to. This is
+different from blindly increasing the amount of local search done on each
+point.
 
-% \subsection{}
-% Another limitation of WalkSAT is that it keeps very limited local states: only
-% the currently searched point. It discards the previous found points entirely.
+GNTSAT practically make the original static max number of iterations
+$k$ dynamic. $k$ would increase if more
+points in the population appear in the same area, as these points have
+increasing probability to be selected, and their children will be further
+descented using stochastic local search. This is one of the major improvements
+made by GNTSAT.
+
+From the perspective of information, WalkSAT keeps very limited local
+information: only the currently searched point. It discards the previous found
+points entirely. GNTSAT keeps a population which contains the history of some
+of the previously found bests. Instead of restarting the local search from a
+random point, GNTSAT recombines the previously found bests to generate
+children using crossover operators, and then use local search on the children.
+Crossover operators utilize the information from the history and introduce
+diversity. From this perspective, GNTSAT improves the utilization of computed
+information.
+
+\subsection{Limitations and further studies}
+A major limitation is this study is the limited number of benchmark instances
+and the number of repeated runs of each instance. We also only tested hard
+uniform random instances. Hence the types of benchmarks need to be diversified
+to include real-life problems.
+
+A GNTSAT solver without any crossover operators should also be studied to
+better understand the effects of crossover operators. The different crossover
+operators should be tested on various benchmarks so that their effects are
+differences could be studied.
