@@ -11,13 +11,13 @@
 		\end{column}
 		\begin{column}{.5\textwidth}
 		\begin{alertblock}{Mumin and his friends}
-			If you want to invite Mumin and his friends to a party...
+			After vaccinated, Mumin and his friends want to plan a tour over Europe...
 			\begin{itemize}
-				\item Mumin is busy at Friday but free at Monday and Tuesday.
-				\item Snufkin is free at Tuesday but busy at Monday and Wednesday.
-				\item Sniff is busy at Friday, Sunday and Thursday.
+				\item Mumin had gone to Berlin and wants to visit Paris and Madrid.
+				\item Snufkin wants to visit London and Berlin but had gone to Madrid.
+				\item Sniff wants to visit Madrid and London, but had gone to Paris.
 			\end{itemize}
-		So which day would you like to schedule your party? 
+		So how to plan the tour?
 		\end{alertblock}	
 		\end{column}
 	\end{columns}	
@@ -26,8 +26,8 @@
 \begin{frame}
 	\frametitle{Incomplete Methods for SAT problems}
 	\begin{equation*}
-	\small
-		\overbrace{(Mon. \vee \neg Fri. \vee Tues.)}^{Mumin} \wedge \overbrace{(\neg Mon. \vee \neg Wed. \vee Tues.)}^{Snufkin} \wedge \overbrace{(\neg Fri. \vee \neg Sun. \vee \neg Thur.)}^{Sniff}
+	\scriptsize
+		\overbrace{(Paris \vee \neg Berlin \vee Madrid)}^{Mumin} \wedge \overbrace{(\neg Madrid \vee London \vee Berlin)}^{Snufkin} \wedge \overbrace{(\neg Paris \vee London \vee Madrid)}^{Sniff}
 	\end{equation*}
 	\large	
 	\begin{alertblock}{What if we choosing another way?}
@@ -36,7 +36,7 @@
 	\normalsize
 		\item If there are numerous variables, then using complete methods is hard to get a solution.
 		\item Sometimes we do not need to prove if a proposition is satisfiable.
-		\item Many incomplete methods have been proved successfully solving SAT problems.
+		\item Many incomplete methods have been proved successfully solving SAT problems\parencite{biere2009handbook}.
 	\end{itemize}
 	\end{alertblock}
 	
@@ -47,8 +47,8 @@
 	\frametitle{Why Genetic Algorithm?}
 	\Large
 	\begin{itemize}
-		\item Genetic algorithm is a heuristic searching method that widely used.
-		\item Numerous incomplete solvers have been invented to solve SAT problems but genetic algorithm was rarely used.
+		\item Genetic algorithm is a heuristic searching method that widely used(\citeauthor{Voss}).
+		\item Numerous incomplete solvers have been invented to solve SAT problems \parencite{marchiori1999flipping, selman1994noise} but genetic algorithm was rarely considered.
 		\item The main challenge for incomplete methods is how to escape local minima.
 	\end{itemize}
 	
