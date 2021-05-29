@@ -1,7 +1,86 @@
 \section{GNTSAT}
 
 \begin{frame}
-	\frametitle{Sample frame title}
-	This is some text in the first frame. This is some text in the first frame.
-	This is some text in the first frame.
+	\frametitle{GNTSAT}
+\begin{small}
+	\renewcommand{\thealgocf}{}
+	\begin{algorithm}[H]
+		\SetAlgoLined
+		\KwData{randomly generated population}
+		\KwResult{a solution for the instance}
+		\BlankLine
+		\While{true}{
+			\If{a solution is found}{
+				return the solution\;
+			}
+			select some best individuals\; randomly choose two individuals among the bests
+			for crossover\; \For{each generated child}{
+				local search\; \If{fitness (improved child) $>$ fitness (the oldest individual)}{
+					replace the oldest individual with the new child\;
+				}
+			}
+		}
+		\caption{GNTSAT solver}
+	\end{algorithm}
+\end{small}
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{GNTSAT}
+	\begin{block}{Selection}
+		Use a modified version of tournament selection to get healthy parents for crossover.
+	\end{block}
+	\begin{block}{Crossover}
+	We consider 5 types of crossover to create potentially promising new individuals: Corrective Clause (CC) crossover,
+	Fleurent and Ferland (F\&F) crossover, uniform crossover, one-point crossover. By analysizing the results of applying different crossovers, we could get the best one.
+	\end{block}
+	\begin{block}{Mutation}
+		Use WalkSAT local search that interleaves the greedy moves with random walk moves, trying to determine the best move by filpping a variable.
+	\end{block}
+\end{frame}
+\begin{frame}[t]
+	\frametitle{GNTSAT}
+	\framesubtitle{Differences between traditional genetic SAT solver and GNTSAT}
+	\begin{block}{Difference in population iteration}
+		\begin{columns}[t]
+			\begin{column}{0.5\textwidth}
+				\textbf{Traditional genetic SAT solver:}
+				\begin{itemize}
+				\item perform genetic operators on each individual accordingly
+				\item update the whole generation with new generation
+				\end{itemize}
+			\end{column}
+			\begin{column}{0.5\textwidth}
+				\textbf{GNTSAT:}
+				\begin{itemize}
+				\item choose a pair of parents among the bests to crossover and then mutate the child. 
+				\item replace the olderest individual with the newly generated child.
+				\end{itemize}
+				\end{column}
+			\end{columns}
+	\end{block}
+\end{frame}
+
+\begin{frame}[t]
+	\frametitle{GNTSAT}
+	\framesubtitle{Differences between traditional genetic SAT solver and GNTSAT}
+	\begin{block}{Difference in mutation opeartor}
+		\begin{columns}[t]
+			\begin{column}{0.5\textwidth}
+				\textbf{Traditional genetic SAT solver:}
+				\begin{itemize}
+				\item flip one or more variables in a candidate solution from its initial state
+				\end{itemize}
+			\end{column}
+			\begin{column}{0.5\textwidth}
+				\textbf{GNTSAT:}
+				\begin{itemize}
+				\item use the WalkSAT local search as the mutation operator.
+				\item always start with a newly generated child that is near to the solution.
+				\item randomly pick a clause among those that are currently unsatisfied, then flip a variable within that clause with some conditions.
+				\end{itemize}
+				\end{column}
+			\end{columns}
+	\end{block}
 \end{frame}
