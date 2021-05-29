@@ -1,6 +1,7 @@
 \begin{frame}
-\frametitle{GNTSAT (uniform crossover) vs WalkSAT}
-\begin{tabular}{l | l l l | l l l}
+\frametitle{Results}
+\framesubtitle{GNTSAT (uniform crossover) vs WalkSAT}
+\begin{tabular}{r | r r r | r r r}
 	\hline
 	      &      & GNTSAT                     &                     &      & WalkSAT                    &                     \\
 	Suite & SR   & AFS \tiny{($\times 10^3$)} & AT \tiny{(seconds)} & SR   & AFS \tiny{($\times 10^3$)} & AT \tiny{(seconds)} \\
@@ -19,4 +20,38 @@
 		\item Much less computation ($2.0 \times 10^6$ vs $5.1 \times 10^6$ flips)
 	\end{itemize}
 \end{alertblock}
+\end{frame}
+
+\begin{frame}
+\frametitle{Results}
+\framesubtitle{With different crossover operators}
+\begin{figure}[htpb]
+	\centering
+	\includegraphics[scale=0.13]{AFS.png}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+\frametitle{Results}
+\framesubtitle{With different crossover operators}
+\begin{figure}[htpb]
+	\centering
+	\includegraphics[scale=0.13]{AverageSR.png}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+\frametitle{Results}
+\framesubtitle{Summery}
+\begin{alertblock}{GNTSAT vs WalkSAT}
+	GNTSAT outperforms WalkSAT in terms of both success
+	rate and computation on larger uniform random 3-SAT instances.
+\end{alertblock}
+
+\begin{alertblock}{Different crossover operators in GNTSAT}
+	They perform similarly. Uniform crossover appears to
+	be slightly more stable and faster on larger uniform random 3-SAT instances
+	(needs to be confirmed by further studies).
+\end{alertblock}
+
 \end{frame}

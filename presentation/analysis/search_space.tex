@@ -1,0 +1,26 @@
+\begin{frame}
+\frametitle{The search space}
+
+\begin{itemize}
+	\item $n$: number of Boolean variables
+	\item $m$: number of clauses
+	\item $h$: number of unsatisfied clauses. $h \in [0, m]$
+	\item $x$: a bit string of length $n$ (e.g.
+	      $0111011$). $2^n$ possible
+	      $x$'s
+\end{itemize}
+
+\begin{figure}[htpb]
+	\begin{center}
+		\begin{tikzpicture}[scale=1, transform shape]
+			\draw[thick,->] (0,0) -- (10,0) node[anchor=north west] {$x$};
+			\draw[thick,->] (0,0) -- (0,3) node[anchor=south east] {$h$};
+			\draw plot [smooth, tension=0.6] coordinates {
+					(0,1) (1,2) (2,1) (3,1) (4,0) (5,1) (6, 0.7) (7, 1) (8, 1) (9, 1) (10, 1)
+				};
+			\node at (4,0) [below] {solution};
+		\end{tikzpicture}
+	\end{center}
+\end{figure}
+
+\end{frame}

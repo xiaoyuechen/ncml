@@ -1,0 +1,64 @@
+\begin{frame}
+\frametitle{How GNTSAT searches}
+\begin{enumerate}
+	\item Pick some random points
+	\item \label{enm:select} Select the points (lower points have better chance)
+	\item Crossover
+	\item Noisy greedy descent on children
+	\item Repeat from \ref{enm:select}
+\end{enumerate}
+
+\begin{figure}[htpb]
+	\begin{center}
+		\begin{tikzpicture}[scale=1, transform shape]
+			\draw[thick,->] (0,0) -- (10,0) node[anchor=north west] {$x$};
+			\draw[thick,->] (0,0) -- (0,3) node[anchor=south east] {$h$};
+			\draw plot [smooth, tension=0.6] coordinates {
+					(0,1) (1,2) (2,1) (3,1) (4,0) (5,1) (6, 0.7) (7, 1) (8, 1) (9, 1) (10, 1)
+				};
+			\node at (4,0) [below] {solution};
+			\onslide<2>{
+				\gdot{6,0.7}
+				\gdot{7,1}
+			}
+			\onslide<2->{
+				\gdot{1,2}
+				\gdot{9,1}
+			}
+			\onslide<3-5>{
+				\gdot[blue]{6,0.7}
+				\gdot[blue]{7,1}
+			}
+			\onslide<6->{
+				\gdot{6,0.7}
+				\gdot{7,1}
+			}
+			\onslide<4>{
+				\gdot[green]{6.5,0.82}
+			}
+			\onslide<5>{
+				\gdot[green]{5.5, 0.88}
+			}
+			\onslide<6->{
+				\gdot{5.5, 0.88}
+			}
+			\onslide<7-9>{
+				\gdot[blue]{6,0.7}
+				\gdot[blue]{5.5, 0.88}
+			}
+			\onslide<8>{
+				\gdot[green]{5.75, 0.8}
+			}
+			\onslide<9>{
+				\gdot[green]{4.75, 0.8}
+			}
+			\onslide<10->{
+				\gdot{6,0.7}
+				\gdot{5.5, 0.88}
+				\gdot{4.75, 0.8}
+			}
+		\end{tikzpicture}
+	\end{center}
+\end{figure}
+
+\end{frame}
