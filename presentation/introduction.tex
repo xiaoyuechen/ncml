@@ -1,55 +1,65 @@
 \section{Introduction}
 
 \begin{frame}
-	\frametitle{An Interesting Scenario}
-	\begin{columns}
-		\begin{column}{.4\textwidth}
+\frametitle{An interesting scenario}
+\begin{columns}
+	\begin{column}{.4\textwidth}
 		\begin{figure}
 			\centering
 			\includegraphics[width=5cm]{Mumin}
 		\end{figure}
-		\end{column}
-		\begin{column}{.5\textwidth}
+	\end{column}
+	\begin{column}{.5\textwidth}
 		\begin{alertblock}{Mumin and his friends}
-			After vaccinated, Mumin and his friends want to plan a tour over Europe...
+			After being vaccinated, Mumin and his friends want to
+			plan a trip around Europe...
 			\begin{itemize}
-				\item Mumin had gone to Berlin and wants to visit Paris and Madrid.
-				\item Snufkin wants to visit London and Berlin but had gone to Madrid.
-				\item Sniff wants to visit Madrid and London, but had gone to Paris.
+				\item Mumin had been to Berlin and wants to visit Paris and Madrid.
+				\item Snufkin wants to visit London and Berlin but had been to Madrid.
+				\item Sniff wants to visit Madrid and London, but had been to Paris.
+				\item ...
 			\end{itemize}
-		So how to plan the tour?
-		\end{alertblock}	
-		\end{column}
-	\end{columns}	
+			How to plan the trip?
+		\end{alertblock}
+	\end{column}
+\end{columns}
 \end{frame}
 
 \begin{frame}
-	\frametitle{Incomplete Methods for SAT problems}
+\frametitle{Incomplete methods for SAT problems}
+\begin{scriptsize}
 	\begin{equation*}
-	\scriptsize
-		\overbrace{(Paris \vee \neg Berlin \vee Madrid)}^{Mumin} \wedge \overbrace{(\neg Madrid \vee London \vee Berlin)}^{Snufkin} \wedge \overbrace{(\neg Paris \vee London \vee Madrid)}^{Sniff}
+		\overbrace{(Paris \vee \neg Berlin \vee Madrid)}^{Mumin} \wedge \overbrace{(\neg Madrid \vee London \vee Berlin)}^{Snufkin} \wedge
+		\overbrace{(\neg Paris \vee London \vee Madrid)}^{Sniff}
 	\end{equation*}
-	\large	
-	\begin{alertblock}{What if we choosing another way?}
-		Using incomplete methods is kind of taking a step back.
-		\begin{itemize}
-	\normalsize
-		\item If there are numerous variables, then using complete methods is hard to get a solution.
-		\item Sometimes we do not need to prove if a proposition is satisfiable.
-		\item Many incomplete methods have been proved successfully solving SAT problems\parencite{biere2009handbook}.
+\end{scriptsize}
+
+\begin{alertblock}{What if we choosing another way?}
+	Using incomplete methods is kind of taking a step
+	back.
+	\begin{itemize}
+		\normalsize
+		\item If there are many destinations and many people planning the trip together,
+		      using complete methods is slow.
+		\item We just want a solution if there is one. If the solver runs for too long, we
+		      just stop it and use the best answer it has given. We do not care about
+		      proving that no solution exists.
+		\item Many incomplete methods are successful in solving SAT
+		      problems\parencite{biere2009handbook}.
 	\end{itemize}
-	\end{alertblock}
-	
-	
+\end{alertblock}
+
 \end{frame}
 
 \begin{frame}
-	\frametitle{Why Genetic Algorithm?}
-	\Large
-	\begin{itemize}
-		\item Genetic algorithm is a heuristic searching method that widely used(\citeauthor{Voss}).
-		\item Numerous incomplete solvers have been invented to solve SAT problems \parencite{marchiori1999flipping, selman1994noise} but genetic algorithm was rarely considered.
-		\item The main challenge for incomplete methods is how to escape local minima.
-	\end{itemize}
-	
+\frametitle{Why genetic algorithm?}
+\begin{itemize}
+	\item Genetic algorithm is a widely used heuristic searching method
+	      \parencite{Voss}.
+	\item Numerous incomplete solvers have been invented to solve SAT problems
+	      \parencite{marchiori1999flipping, selman1994noise}.
+	\item Classical genetic algorithms have poor performance.
+	\item The main challenge for incomplete methods is how to escape local minima.
+\end{itemize}
+
 \end{frame}
