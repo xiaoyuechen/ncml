@@ -2,6 +2,20 @@
 \usetheme{Madrid}
 \usecolortheme{beaver}
 \usepackage{graphicx}
+\usepackage[
+	style=apa,
+	backend=biber,
+	sortcites=true,
+	sorting=nyt,
+	%    isbn=false,
+	%    url=false,
+	doi=false,
+	%    eprint=false,
+	hyperref=false,
+	backref=false,
+	%    firstinits=false,
+]{biblatex}
+\addbibresource{bibliography.bib}
 
 \title[GNTSAT]{GNTSAT: a SAT solver using genetic algorithms}
 
@@ -26,5 +40,10 @@
 \include{introduction}
 \include{gntsat}
 \include{results}
+
+\begin{frame}
+\frametitle{References}
+\printbibliography
+\end{frame}
 
 \end{document}
