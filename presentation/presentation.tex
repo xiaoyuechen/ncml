@@ -1,6 +1,7 @@
 \documentclass{beamer}
 \usetheme{Madrid}
 \usecolortheme{beaver}
+\usepackage{graphicx}
 
 \title[GNTSAT]{GNTSAT: a SAT solver using genetic algorithms}
 
@@ -10,14 +11,17 @@
 
 \institute[UU]{Uppsala University}
 
+\AtBeginSection[]
+{
+	\begin{frame}
+	\frametitle{Table of contents}
+	\tableofcontents[currentsection]
+	\end{frame}
+}
+
 \begin{document}
 
 \frame{\titlepage}
-
-\begin{frame}
-	\frametitle{Table of Contents}
-	\tableofcontents
-\end{frame}
 
 \include{introduction}
 \include{gntsat}
