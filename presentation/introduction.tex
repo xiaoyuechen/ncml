@@ -1,7 +1,55 @@
 \section{Introduction}
 
 \begin{frame}
-	\frametitle{Sample frame title}
-	This is some text in the first frame. This is some text in the first frame.
-	This is some text in the first frame.
+	\frametitle{An Interesting Scenario}
+	\begin{columns}
+		\begin{column}{.4\textwidth}
+		\begin{figure}
+			\centering
+			\includegraphics[width=5cm]{Mumin}
+		\end{figure}
+		\end{column}
+		\begin{column}{.5\textwidth}
+		\begin{alertblock}{Mumin and his friends}
+			If you want to invite Mumin and his friends to a party...
+			\begin{itemize}
+				\item Mumin is busy at Friday but free at Monday and Tuesday.
+				\item Snufkin is free at Tuesday but busy at Monday and Wednesday.
+				\item Sniff is busy at Friday, Sunday and Thursday.
+			\end{itemize}
+		So which day would you like to schedule your party? 
+		\end{alertblock}	
+		\end{column}
+	\end{columns}	
+\end{frame}
+
+\begin{frame}
+	\frametitle{Incomplete Methods for SAT problems}
+	\begin{equation*}
+	\small
+		\overbrace{(Mon. \vee \neg Fri. \vee Tues.)}^{Mumin} \wedge \overbrace{(\neg Mon. \vee \neg Wed. \vee Tues.)}^{Snufkin} \wedge \overbrace{(\neg Fri. \vee \neg Sun. \vee \neg Thur.)}^{Sniff}
+	\end{equation*}
+	\large	
+	\begin{alertblock}{What if we choosing another way?}
+		Using incomplete methods is kind of taking a step back.
+		\begin{itemize}
+	\normalsize
+		\item If there are numerous variables, then using complete methods is hard to get a solution.
+		\item Sometimes we do not need to prove if a proposition is satisfiable.
+		\item Many incomplete methods have been proved successfully solving SAT problems.
+	\end{itemize}
+	\end{alertblock}
+	
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{Why Genetic Algorithm?}
+	\Large
+	\begin{itemize}
+		\item Genetic algorithm is a heuristic searching method that widely used.
+		\item Numerous incomplete solvers have been invented to solve SAT problems but genetic algorithm was rarely used.
+		\item The main challenge for incomplete methods is how to escape local minima.
+	\end{itemize}
+	
 \end{frame}
