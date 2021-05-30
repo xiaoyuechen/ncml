@@ -41,46 +41,37 @@
 \end{frame}
 \begin{frame}[t]
 	\frametitle{GNTSAT}
-	\framesubtitle{Differences between traditional genetic SAT solver and GNTSAT}
-	\begin{block}{Difference in population iteration}
-		\begin{columns}[t]
-			\begin{column}{0.5\textwidth}
-				\textbf{Traditional genetic SAT solver:}
-				\begin{itemize}
-				\item perform genetic operators on each individual accordingly
-				\item update the whole generation with new generation
-				\end{itemize}
-			\end{column}
-			\begin{column}{0.5\textwidth}
-				\textbf{GNTSAT:}
-				\begin{itemize}
-				\item choose a pair of parents among the bests to crossover and then mutate the child. 
-				\item replace the olderest individual with the newly generated child.
-				\end{itemize}
-				\end{column}
-			\end{columns}
+	\framesubtitle{Two differences between classical genetic SAT solver and GNTSAT}
+	\textbf{1. Difference in population iteration:}
+	\begin{block}{classical genetic SAT solver:}
+		\begin{itemize}
+		\item perform genetic operators on each individual accordingly.
+		\item update the whole generation with new generation.
+		\end{itemize}
+	\end{block}
+	\begin{block}{GNTSAT:}		
+		\begin{itemize}
+		\item choose a pair of parents among the bests to crossover and then mutate the child. 
+		\item replace the olderest individual with the newly generated child.
+		\end{itemize}	
 	\end{block}
 \end{frame}
 
 \begin{frame}[t]
 	\frametitle{GNTSAT}
-	\framesubtitle{Differences between traditional genetic SAT solver and GNTSAT}
-	\begin{block}{Difference in mutation operator}
-		\begin{columns}[t]
-			\begin{column}{0.5\textwidth}
-				\textbf{Traditional genetic SAT solver:}
-				\begin{itemize}
-				\item flip one or more variables in a candidate solution from its initial state
-				\end{itemize}
-			\end{column}
-			\begin{column}{0.5\textwidth}
-				\textbf{GNTSAT:}
-				\begin{itemize}
-				\item use the WalkSAT local search as the mutation operator.
-				\item always start with a newly generated child that is near to the solution.
-				\item randomly pick a clause among those that are currently unsatisfied, then flip a variable within that clause with some conditions.
-				\end{itemize}
-				\end{column}
-			\end{columns}
+	\framesubtitle{Two differences between classical genetic SAT solver and GNTSAT}
+	\textbf{2. Difference in mutation operator:}
+	\begin{block}{classical genetic SAT solver:}
+		\begin{itemize}
+		\item flip one or more variables in a candidate solution from its initial state.
+		\item not use the structure informaiton of the 3-SAT problem.
+		\end{itemize}
+	\end{block}
+	\begin{block}{GNTSAT:}	
+		\begin{itemize}
+		\item use the WalkSAT local search as the mutation operator.
+		\item always start with a newly generated child that is near to the solution.
+		\item use information about the structure of the 3-SAT problem (randomly pick a clause among those that are currently unsatisfied, then flip a variable within that clause with some conditions).
+		\end{itemize}
 	\end{block}
 \end{frame}
