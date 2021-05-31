@@ -42,7 +42,7 @@
 \begin{frame}[t]
 	\frametitle{GNTSAT}
 	\framesubtitle{Two differences between classical genetic SAT solver and GNTSAT}
-	\textbf{1. Difference in population iteration:}
+	\textbf{1. Difference in population management:}
 	\begin{alertblock}{classical genetic SAT solver:}
 		\begin{itemize}
 		\item perform genetic operators on each individual accordingly.
@@ -52,7 +52,7 @@
 	\begin{alertblock}{GNTSAT:}		
 		\begin{itemize}
 		\item choose a pair of parents among the bests to crossover and then mutate the child. 
-		\item replace the olderest individual with the newly generated child.
+		\item replace the oldest individual with the newly generated child.
 		\end{itemize}	
 	\end{alertblock}
 \end{frame}
