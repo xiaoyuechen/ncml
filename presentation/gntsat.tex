@@ -33,7 +33,7 @@
 	\end{block}
 	\begin{block}{Crossover}
 	We consider 5 types of crossover to create potentially promising new individuals: Corrective Clause (CC) crossover,
-	Fleurent and Ferland (F\&F) crossover, uniform crossover, one-point crossover. By analyzing the results of applying different crossovers, we could get the best one.
+	Fleurent and Ferland (F\&F) crossover, uniform crossover, one-point and two-point crossover. By analyzing the results, we could get the best one.
 	\end{block}
 	\begin{block}{Mutation}
 		Use WalkSAT local search that interleaves the greedy moves with random walk moves, trying to determine the best move by flipping a variable.
@@ -43,35 +43,35 @@
 	\frametitle{GNTSAT}
 	\framesubtitle{Two differences between classical genetic SAT solver and GNTSAT}
 	\textbf{1. Difference in population iteration:}
-	\begin{block}{classical genetic SAT solver:}
+	\begin{alertblock}{classical genetic SAT solver:}
 		\begin{itemize}
 		\item perform genetic operators on each individual accordingly.
 		\item update the whole generation with new generation.
 		\end{itemize}
-	\end{block}
-	\begin{block}{GNTSAT:}		
+	\end{alertblock}
+	\begin{alertblock}{GNTSAT:}		
 		\begin{itemize}
 		\item choose a pair of parents among the bests to crossover and then mutate the child. 
 		\item replace the olderest individual with the newly generated child.
 		\end{itemize}	
-	\end{block}
+	\end{alertblock}
 \end{frame}
 
 \begin{frame}[t]
 	\frametitle{GNTSAT}
 	\framesubtitle{Two differences between classical genetic SAT solver and GNTSAT}
 	\textbf{2. Difference in mutation operator:}
-	\begin{block}{classical genetic SAT solver:}
+	\begin{alertblock}{classical genetic SAT solver:}
 		\begin{itemize}
-		\item flip one or more variables in a candidate solution from its initial state.
-		\item not use the structure informaiton of the 3-SAT problem.
+		\item flip one or more variables at once from its initial state.
+		\item do not consider the structure of the 3-SAT instance.
 		\end{itemize}
-	\end{block}
-	\begin{block}{GNTSAT:}	
+	\end{alertblock}
+	\begin{alertblock}{GNTSAT:}	
 		\begin{itemize}
 		\item use the WalkSAT local search as the mutation operator.
 		\item always start with a newly generated child that is near to the solution.
-		\item use information about the structure of the 3-SAT problem (randomly pick a clause among those that are currently unsatisfied, then flip a variable within that clause with some conditions).
+		\item use the structure information of the 3-SAT instance (randomly pick a clause among those that are currently unsatisfied, then flip a variable within that clause with some conditions).
 		\end{itemize}
-	\end{block}
+	\end{alertblock}
 \end{frame}
