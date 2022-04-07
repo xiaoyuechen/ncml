@@ -1,0 +1,32 @@
+* NCML
+  This repository contains the source code, proposal, report and
+  presentation for the project of Natural Computation Methods for
+  Machine Learning --- [[file:gntsat][GNTSAT]].
+
+** GNTSAT
+   GNTSAT is a hybrid SAT solver based on WalkSAT and Genetic
+   Algorithms. GNTSAT outperforms WalkSAT in many benchmark instances
+   (see [[file:report]] for details).
+
+*** Building
+    After cloning the repository, ~cd~ to [[file:gntsat]]. Then run the
+    following commands to build the solver using CMake (requires CMake
+    version >= 3.14):
+
+    #+begin_src shell
+      mkdir build
+      cmake -S . -B build
+      cmake --build build
+    #+end_src
+
+    The executable ~gntsat~ will be under the ~build~ directory.
+
+*** Usage
+    #+begin_src
+      gntsat [--crossover=COTYPE] FILE
+
+        COTYPE  cc, ff, uniform, onepoint, or twopoint
+        FILE    The path of DIMACS CNF problem file
+    #+end_src
+
+    To know the difference between the crossover types, see [[file:report]].
